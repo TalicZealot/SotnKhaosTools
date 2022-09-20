@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Profile 1": {
+      "commandName": "Executable",
+      "executablePath": "D:\\Programming\\SotnKhaosTools\\SotnKhaosTools\\BizHawk\\EmuHawk.exe",
+      "commandLineArgs": "--open-ext-tool-dll=SotnKhaosTools",
+      "workingDirectory": "D:\\Programming\\SotnKhaosTools\\SotnKhaosTools\\BizHawk"
+    }
+  }
+}

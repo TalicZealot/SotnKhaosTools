@@ -18,7 +18,7 @@ This tool and the accompanying library and app are open source. The idea is to i
   - [Installation](#installation)
   - [Usage](#usage)
   - [Updating](#updating)
-  - [Autotracker](# Additional Features)
+  - [Additional Features](#Additional-Features)
   - [Khaos-Setup](#Khaos-Setup)
   - [Useful links](#useful-links)
   - [Contributors](#contributors)

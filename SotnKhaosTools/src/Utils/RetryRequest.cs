@@ -6,6 +6,7 @@ namespace SotnKhaosTools.Utils
 {
 	public static class RetryRequest
 	{
+		//TODO: Implement delay jitter
 		public static async Task<T> Do<T>(Func<Task<T>> action, int baseInterval, int attempts)
 		{
 			List<Exception> exceptions = new();

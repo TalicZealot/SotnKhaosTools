@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
 using BizHawk.Emulation.Common;
 using SotnApi.Interfaces;
 using SotnKhaosTools.Configuration.Interfaces;
-using SotnKhaosTools.Constants;
 using SotnKhaosTools.Khaos;
 using SotnKhaosTools.Khaos.Interfaces;
 using SotnKhaosTools.Khaos.Models;
 using SotnKhaosTools.Services;
 using SotnKhaosTools.Services.Adapters;
-using SotnKhaosTools.Services.Models;
 
 namespace SotnKhaosTools
 {
@@ -21,14 +19,12 @@ namespace SotnKhaosTools
 	{
 		private ICheatCollectionAdapter adaptedCheats;
 		private readonly IToolConfig toolConfig;
-		private readonly TwitchListener? twitchListener;
 		private readonly ChannelPointsController? channelPointsController;
 		private ActionDispatcher? actionDispatcher;
-		private KhaosEventScheduler? actionScheduler;
 		private KhaosController? khaosController;
 		private CheatsController? cheatsController;
 
-		private List<ActionTimer> actionTimers = new();
+		private int[] actionTimers;
 		private System.Windows.Forms.Timer countdownTimer;
 
 		private string heartOfVladLocation = String.Empty;
@@ -47,9 +43,7 @@ namespace SotnKhaosTools
 		private bool started = false;
 		private bool connected = false;
 
-		private int schedulerCounter = 0;
-
-		public KhaosForm(IToolConfig toolConfig, CheatCollection cheats, ISotnApi sotnApi, INotificationService notificationService, IInputService inputService, IMemoryDomains memoryDomains)
+		public KhaosForm(IToolConfig toolConfig, CheatCollection cheats, ISotnApi sotnApi, INotificationService notificationService, IMemoryDomains memoryDomains)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (cheats is null) throw new ArgumentNullException(nameof(cheats));
@@ -59,12 +53,10 @@ namespace SotnKhaosTools
 			this.toolConfig = toolConfig;
 
 			adaptedCheats = new CheatCollectionAdapter(cheats, memoryDomains);
-			actionScheduler = new KhaosEventScheduler(toolConfig);
 			cheatsController = new CheatsController(adaptedCheats);
-			khaosController = new KhaosController(toolConfig, sotnApi, cheatsController, notificationService, inputService, this, actionScheduler);
-			twitchListener = new TwitchListener(Paths.TwitchRedirectUri);
-			actionDispatcher = new ActionDispatcher(toolConfig, khaosController, notificationService, sotnApi, this);
-			channelPointsController = new ChannelPointsController(toolConfig, twitchListener, actionDispatcher, notificationService, new EnemyRenamer(sotnApi));
+			khaosController = new KhaosController(toolConfig, sotnApi, cheatsController, notificationService, this);
+			actionDispatcher = new ActionDispatcher(toolConfig, khaosController, notificationService, this);
+			channelPointsController = new ChannelPointsController(toolConfig, actionDispatcher, notificationService, new EnemyRenamer(sotnApi));
 
 			InitializeComponent();
 			SuspendLayout();
@@ -91,6 +83,9 @@ namespace SotnKhaosTools
 			redemptionsGridView.AutoGenerateColumns = false;
 			redemptionsGridView.DataSource = channelPointsController.Redemptions;
 			redemptionsGridView.CellClick += RefundRedemption;
+
+			//actionTimers = new List<int>(toolConfig.Khaos.Actions.Count);
+			actionTimers = new int[toolConfig.Khaos.Actions.Count];
 		}
 
 		public ICheatCollectionAdapter AdaptedCheats
@@ -237,34 +232,19 @@ namespace SotnKhaosTools
 		}
 		public List<QueuedAction> ActionQueue { get; set; }
 
-		public void AddTimer(ActionTimer timer)
+		public void AddTimer(int i)
 		{
-			actionTimers.Add(timer);
-		}
-		public bool ContainsTimer(string name)
-		{
-			return actionTimers.Where(timer => timer.Name == name).Any();
+			actionTimers[i] = (int) toolConfig.Khaos.Actions[i].Duration.TotalSeconds;
 		}
 		public void UpdateKhaosValues()
 		{
-			if (khaosController is not null)
-			{
-				khaosController.Update();
-				UpdateScheduler();
-			}
+			khaosController?.Update();
 		}
-		public void UpdateScheduler()
+		public void FrameAdvance()
 		{
-			if (schedulerCounter == 8)
-			{
-				actionScheduler.CheckSchedule();
-			}
-			else
-			{
-				schedulerCounter++;
-			}
+			khaosController?.FrameAdvance();
+			actionDispatcher?.FrameAdvance();
 		}
-
 		private void KhaosForm_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 		}
@@ -276,30 +256,24 @@ namespace SotnKhaosTools
 		}
 		private void DecrementTimers(Object sender, EventArgs e)
 		{
-			for (int i = actionTimers.Count - 1; i >= 0; i--)
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < actionTimers.Length; i++)
 			{
-				if (actionTimers[i].TotalDuration == 0)
+				if (actionTimers[i] == 0)
 				{
-					actionTimers[i].TotalDuration = (int) actionTimers[i].Duration.TotalSeconds;
+					continue;
 				}
-
-				actionTimers[i].Duration -= TimeSpan.FromSeconds(1);
-				if (actionTimers[i].Duration.TotalSeconds < 1)
-				{
-					actionTimers.Remove(actionTimers[i]);
-				}
+				actionTimers[i] -= 1;
+				int minutes = actionTimers[i] / 60;
+				int seconds = actionTimers[i] % 60;
+				sb.Append(toolConfig.Khaos.Actions[i].Name.PadRight(16, ' '));
+				sb.Append(minutes);
+				sb.Append(':');
+				sb.Append(seconds);
+				sb.AppendLine();
 			}
-
-			string timersLines = "";
-
-			foreach (ActionTimer? timer in actionTimers)
-			{
-				timersLines += timer.Name.PadRight(16, ' ') + timer.Duration.Minutes + ":" + timer.Duration.Seconds + "\r\n";
-			}
-
-			timersTextBox.Text = timersLines;
+			timersTextBox.Text = sb.ToString();
 			DrawQueue();
-
 		}
 		private void DrawQueue()
 		{
@@ -407,14 +381,12 @@ namespace SotnKhaosTools
 			}
 			else
 			{
-				bool result = await channelPointsController.Connect();
-				if (result)
-				{
-					connectButton.Text = "Disonnect";
-					connected = true;
-					connectButton.BackColor = System.Drawing.Color.FromArgb(93, 56, 147);
-					connectButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(145, 70, 255);
-				}
+				channelPointsController.Connect();
+
+				connectButton.Text = "Disonnect";
+				connected = true;
+				connectButton.BackColor = System.Drawing.Color.FromArgb(93, 56, 147);
+				connectButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(145, 70, 255);
 			}
 		}
 
@@ -502,18 +474,6 @@ namespace SotnKhaosTools
 				khaosController.Banish();
 			}
 		}
-		private void burstButton_Click(object sender, EventArgs e)
-		{
-			if (toolConfig.Khaos.ControlPannelQueueActions)
-			{
-				actionDispatcher.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.KhaoticBurst, UserName = "Khaos" });
-			}
-			else
-			{
-
-				khaosController.KhaoticBurst();
-			}
-		}
 		private void khaosTrackButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -558,18 +518,6 @@ namespace SotnKhaosTools
 			else
 			{
 				khaosController.RespawnBosses();
-			}
-		}
-		private void subsonlyButton_Click(object sender, EventArgs e)
-		{
-			if (toolConfig.Khaos.ControlPannelQueueActions)
-			{
-				actionDispatcher.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.SubweaponsOnly, UserName = "Khaos" });
-			}
-			else
-			{
-
-				khaosController.SubweaponsOnly();
 			}
 		}
 		private void crippleButton_Click(object sender, EventArgs e)
@@ -637,6 +585,17 @@ namespace SotnKhaosTools
 			else
 			{
 				khaosController.HnK();
+			}
+		}
+		private void bulletHellButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				actionDispatcher.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.BulletHell, UserName = "Khaos" });
+			}
+			else
+			{
+				khaosController.BulletHell();
 			}
 		}
 		#endregion
@@ -755,17 +714,6 @@ namespace SotnKhaosTools
 			else
 			{
 				khaosController.Haste();
-			}
-		}
-		private void lordButton_Click(object sender, EventArgs e)
-		{
-			if (toolConfig.Khaos.ControlPannelQueueActions)
-			{
-				actionDispatcher.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.Lord, UserName = "Khaos" });
-			}
-			else
-			{
-				khaosController.Lord();
 			}
 		}
 		#endregion

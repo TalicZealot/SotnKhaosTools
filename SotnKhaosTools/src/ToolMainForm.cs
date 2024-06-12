@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
 using BizHawk.Client.EmuHawk;
@@ -20,25 +19,24 @@ namespace SotnKhaosTools
 		Description = "Tools for Twitch interaction for the SotN randomizer.",
 		LoadAssemblyFiles = new[]
 		{
-			"SotnKhaosTools/SotnApi.dll",
-			"SotnKhaosTools/SimpleTCP.dll",
-			"SotnKhaosTools/WatsonWebsocket.dll",
-			"SotnKhaosTools/Microsoft.Extensions.Logging.Abstractions.dll",
-			"SotnKhaosTools/System.Net.Http.dll",
-			"SotnKhaosTools/TwitchLib.Api.Core.Enums.dll",
-			"SotnKhaosTools/TwitchLib.Api.Core.Interfaces.dll",
-			"SotnKhaosTools/TwitchLib.Api.Helix.Models.dll",
-			"SotnKhaosTools/TwitchLib.Api.Core.Models.dll",
-			"SotnKhaosTools/TwitchLib.Api.Core.dll",
-			"SotnKhaosTools/TwitchLib.Api.Helix.dll",
-			"SotnKhaosTools/TwitchLib.Api.V5.Models.dll",
-			"SotnKhaosTools/TwitchLib.Api.V5.dll",
-			"SotnKhaosTools/TwitchLib.Communication.dll",
-			"SotnKhaosTools/TwitchLib.Api.dll",
-			"SotnKhaosTools/TwitchLib.PubSub.dll"
+			"SotnKhaosTools/dll/SotnApi.dll",
+			"SotnKhaosTools/dll/System.Threading.Tasks.Extensions.dll",
+			"SotnKhaosTools/dll/Microsoft.Extensions.Logging.Abstractions.dll",
+			"SotnKhaosTools/dll/System.Net.Http.dll",
+			"SotnKhaosTools/dll/TwitchLib.Api.dll",
+			"SotnKhaosTools/dll/TwitchLib.Api.Helix.dll",
+			"SotnKhaosTools/dll/TwitchLib.Api.Helix.Models.dll",
+			"SotnKhaosTools/dll/TwitchLib.Api.Core.dll",
+			"SotnKhaosTools/dll/TwitchLib.Api.Core.Enums.dll",
+			"SotnKhaosTools/dll/TwitchLib.Api.Core.Interfaces.dll",
+			"SotnKhaosTools/dll/TwitchLib.Api.Core.Models.dll",
+			"SotnKhaosTools/dll/TwitchLib.Api.V5.dll",
+			"SotnKhaosTools/dll/TwitchLib.Api.V5.Models.dll",
+			"SotnKhaosTools/dll/TwitchLib.Communication.dll",
+			"SotnKhaosTools/dll/TwitchLib.PubSub.dll"
 		})]
 	[ExternalToolEmbeddedIcon("SotnKhaosTools.Resources.BizAlucard.png")]
-	[ExternalToolApplicability.SingleRom(CoreSystem.Playstation, "0DDCBC3D")]
+	[ExternalToolApplicability.SingleRom(VSystemID.Raw.PSX, "0DDCBC3D")]
 	public partial class ToolMainForm : ToolFormBase, IExternalToolForm
 	{
 		[RequiredService]
@@ -60,9 +58,6 @@ namespace SotnKhaosTools
 		private IEmulationApi? _maybeEmuAPI { get; set; }
 
 		[RequiredApi]
-		private IGameInfoApi? _maybeGameInfoAPI { get; set; }
-
-		[RequiredApi]
 		private IGuiApi? _maybeGuiAPI { get; set; }
 
 		[RequiredApi]
@@ -79,7 +74,6 @@ namespace SotnKhaosTools
 			[typeof(IEmuClientApi)] = _maybeClientAPI ?? throw new NullReferenceException(),
 			[typeof(IJoypadApi)] = _maybeJoypadApi ?? throw new NullReferenceException(),
 			[typeof(IEmulationApi)] = _maybeEmuAPI ?? throw new NullReferenceException(),
-			[typeof(IGameInfoApi)] = _maybeGameInfoAPI ?? throw new NullReferenceException(),
 			[typeof(IGuiApi)] = _maybeGuiAPI ?? throw new NullReferenceException(),
 			[typeof(IMemoryApi)] = _maybeMemAPI ?? throw new NullReferenceException(),
 			[typeof(ISQLiteApi)] = _maybesQLiteApi ?? throw new NullReferenceException(),
@@ -90,15 +84,11 @@ namespace SotnKhaosTools
 		private ToolConfig toolConfig;
 		private WatchlistService? watchlistService;
 		private NotificationService? notificationService;
-		private InputService? inputService;
 		private TrackerForm? trackerForm;
 		private KhaosForm? khaosForm;
-		private CoopForm? coopForm;
 		private AutotrackerSettingsPanel? autotrackerSettingsPanel;
 		private KhaosSettingsPanel? khaosSettingsPanel;
-		private CoopSettingsPanel? coopSettingsPanel;
-		private AboutPanel? aboutPanel;
-		private string _windowTitle = "Symphony of the Night Randomizer Tools";
+		private string _windowTitle = "Khaos";
 		private const int PanelOffset = 130;
 		private int cooldown = 0;
 
@@ -112,18 +102,13 @@ namespace SotnKhaosTools
 
 		private void InitializeConfig()
 		{
-			string currentVersion = typeof(AboutPanel).Assembly.GetName().Version.ToString().Substring(0, 5);
+			string currentVersion = typeof(ToolConfig).Assembly.GetName().Version.ToString().Substring(0, 5);
 			if (File.Exists(Paths.ConfigPath))
 			{
 				string configJson = File.ReadAllText(Paths.ConfigPath);
 
 				toolConfig = JsonConvert.DeserializeObject<ToolConfig>(configJson,
 					new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, MissingMemberHandling = MissingMemberHandling.Ignore }) ?? new ToolConfig();
-
-				if (toolConfig.Khaos.Actions.Count != Constants.Khaos.KhaosActionsCount)
-				{
-					toolConfig.Khaos.DefaultActions();
-				}
 			}
 			else
 			{
@@ -139,16 +124,11 @@ namespace SotnKhaosTools
 
 		protected override string WindowTitle => _windowTitle;
 
-		protected override string WindowTitleStatic => "Symphony of the Night Randomizer Tools";
+		protected override string WindowTitleStatic => "Khaos";
 
 		private void ToolMainForm_Load(object sender, EventArgs e)
 		{
 			this.Location = toolConfig.Location;
-
-			aboutPanel = new AboutPanel();
-			aboutPanel.Location = new Point(0, PanelOffset);
-			this.Controls.Add(aboutPanel);
-			aboutPanel.UpdateButton_Click += AboutPanel_UpdateButton_Click;
 
 			autotrackerSettingsPanel = new AutotrackerSettingsPanel(toolConfig);
 			autotrackerSettingsPanel.Location = new Point(0, PanelOffset);
@@ -161,10 +141,6 @@ namespace SotnKhaosTools
 				khaosSettingsPanel.NotificationService = notificationService;
 			}
 			this.Controls.Add(khaosSettingsPanel);
-
-			coopSettingsPanel = new CoopSettingsPanel(toolConfig);
-			coopSettingsPanel.Location = new Point(0, PanelOffset);
-			this.Controls.Add(coopSettingsPanel);
 		}
 
 		private void LoadCheats()
@@ -191,11 +167,6 @@ namespace SotnKhaosTools
 				khaosForm.Close();
 				khaosForm.Dispose();
 			}
-			if (coopForm is not null && !coopForm.IsDisposed)
-			{
-				coopForm.Close();
-				coopForm.Dispose();
-			}
 
 			if (notificationService is not null)
 			{
@@ -221,7 +192,6 @@ namespace SotnKhaosTools
 
 			sotnApi = new SotnApi.Main.SotnApi(_maybeMemAPI);
 			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
-			inputService = new InputService(_maybeJoypadApi, sotnApi);
 			notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI);
 			if (khaosSettingsPanel is not null)
 			{
@@ -231,9 +201,17 @@ namespace SotnKhaosTools
 
 		public override void UpdateValues(ToolFormUpdateType type)
 		{
-			if (coopForm is not null || khaosForm is not null)
+			if (type != ToolFormUpdateType.PostFrame)
 			{
-				inputService.UpdateInputs();
+				return;
+			}
+			if (khaosForm is not null)
+			{
+				khaosForm.FrameAdvance();
+			}
+			if (notificationService is not null)
+			{
+				notificationService.Refresh();
 			}
 			cooldown++;
 			if (cooldown == Globals.UpdateCooldownFrames)
@@ -246,10 +224,6 @@ namespace SotnKhaosTools
 				if (khaosForm is not null)
 				{
 					khaosForm.UpdateKhaosValues();
-				}
-				if (coopForm is not null)
-				{
-					coopForm.UpdateCoop();
 				}
 				if (this.MainForm.CheatList.Count == 0)
 				{
@@ -273,12 +247,6 @@ namespace SotnKhaosTools
 				khaosForm.Dispose();
 			}
 
-			if (coopForm != null)
-			{
-				coopForm.Close();
-				coopForm.Dispose();
-			}
-
 			if (notificationService != null)
 			{
 				notificationService.StopOverlayServer();
@@ -287,7 +255,6 @@ namespace SotnKhaosTools
 
 			sotnApi = null;
 			watchlistService = null;
-			inputService = null;
 
 			this.MainForm.CheatList.DisableAll();
 		}
@@ -319,26 +286,12 @@ namespace SotnKhaosTools
 					khaosForm.Close();
 					khaosForm.Dispose();
 				}
-				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService, _memoryDomains);
+				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, _memoryDomains);
 				khaosForm.Show();
 				if (trackerForm is not null && !trackerForm.IsDisposed)
 				{
 					trackerForm.SetTrackerVladRelicLocationDisplay(khaosForm);
 				}
-			}
-		}
-
-		private void multiplayerLaunch_Click(object sender, EventArgs e)
-		{
-			if (sotnApi is not null && watchlistService is not null && APIs.Joypad is not null)
-			{
-				if (coopForm is not null)
-				{
-					coopForm.Close();
-					coopForm.Dispose();
-				}
-				coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, APIs.Joypad, notificationService);
-				coopForm.Show();
 			}
 		}
 
@@ -353,14 +306,6 @@ namespace SotnKhaosTools
 			khaosSettingsPanel.Enabled = false;
 			khaosChatLaunch.Visible = false;
 			khaosChatLaunch.Enabled = false;
-
-			coopSettingsPanel.Visible = false;
-			coopSettingsPanel.Enabled = false;
-			multiplayerLaunch.Visible = false;
-			multiplayerLaunch.Enabled = false;
-
-			aboutPanel.Visible = false;
-			aboutPanel.Enabled = false;
 		}
 
 		private void khaosChatSelect_Click(object sender, EventArgs e)
@@ -374,56 +319,6 @@ namespace SotnKhaosTools
 			autotrackerSettingsPanel.Enabled = false;
 			autotrackerLaunch.Visible = false;
 			autotrackerLaunch.Enabled = false;
-
-			coopSettingsPanel.Visible = false;
-			coopSettingsPanel.Enabled = false;
-			multiplayerLaunch.Visible = false;
-			multiplayerLaunch.Enabled = false;
-
-			aboutPanel.Visible = false;
-			aboutPanel.Enabled = false;
-		}
-
-		private void multiplayerSelect_Click(object sender, EventArgs e)
-		{
-			coopSettingsPanel.Visible = true;
-			coopSettingsPanel.Enabled = true;
-			multiplayerLaunch.Visible = true;
-			multiplayerLaunch.Enabled = true;
-
-			autotrackerSettingsPanel.Visible = false;
-			autotrackerSettingsPanel.Enabled = false;
-			autotrackerLaunch.Visible = false;
-			autotrackerLaunch.Enabled = false;
-
-			khaosSettingsPanel.Visible = false;
-			khaosSettingsPanel.Enabled = false;
-			khaosChatLaunch.Visible = false;
-			khaosChatLaunch.Enabled = false;
-
-			aboutPanel.Visible = false;
-			aboutPanel.Enabled = false;
-		}
-
-		private void aboutButton_Click(object sender, EventArgs e)
-		{
-			aboutPanel.Visible = true;
-			aboutPanel.Enabled = true;
-
-			autotrackerSettingsPanel.Visible = false;
-			autotrackerSettingsPanel.Enabled = false;
-			autotrackerLaunch.Visible = false;
-			autotrackerLaunch.Enabled = false;
-
-			khaosSettingsPanel.Visible = false;
-			khaosSettingsPanel.Enabled = false;
-			khaosChatLaunch.Visible = false;
-			khaosChatLaunch.Enabled = false;
-
-			coopSettingsPanel.Visible = false;
-			coopSettingsPanel.Enabled = false;
-			multiplayerLaunch.Visible = false;
-			multiplayerLaunch.Enabled = false;
 		}
 
 		private void ToolMainForm_Move(object sender, EventArgs e)
@@ -434,13 +329,5 @@ namespace SotnKhaosTools
 			}
 		}
 
-		private void AboutPanel_UpdateButton_Click(object sender, EventArgs e)
-		{
-			string path = Directory.GetCurrentDirectory();
-			var updater = new ProcessStartInfo() { FileName = path + Paths.UpdaterPath, UseShellExecute = false };
-			updater.WorkingDirectory = (path + Paths.UpdaterFolderPath);
-			Process.Start(updater);
-			Application.Exit();
-		}
 	}
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using SotnApi.Constants.Values.Alucard.Enums;
+using SotnApi.Constants.Values.Game;
 using SotnApi.Models;
+using SotnKhaosTools.Khaos.Models;
 using MapLocation = SotnKhaosTools.RandoTracker.Models.MapLocation;
 
 namespace SotnKhaosTools.Constants
@@ -151,281 +153,120 @@ namespace SotnKhaosTools.Constants
 			new MapLocation{X = 32, Y = 33, SecondCastle = 1}
 		};
 
-		public static readonly List<SearchableActor> AcceptedHordeEnemies = new List<SearchableActor>
+		public static readonly List<ushort> AcceptedHordeEnemies = new List<ushort>
 		{
-			new SearchableActor { Name="Zombie", Hp = 1, Damage = 14, AiId = 25776 },
-			new SearchableActor { Name="Bat", Hp = 1, Damage = 16, AiId = 25188 },
-			new SearchableActor { Name="Bone Scimitar", Hp = 18 , Damage = 5, AiId = 23212  },
-			new SearchableActor { Name="Bloody Zombie", Hp = 24 , Damage = 10, AiId = 42580  },
-			new SearchableActor { Hp = 48, Damage = 13, AiId = 4612 },
-			new SearchableActor { Name="Bone Scimitar Alchemy Lab", Hp = 18, Damage = 5, AiId = 14308  },
-			new SearchableActor { Name="Blood Skeleton", Hp = 9, Damage = 8, AiId = 31064  },
-			new SearchableActor { Name="Skeleton", Hp = 9, Damage = 2, AiId = 24516 },
-			new SearchableActor { Name="Spittle Bone", Hp = 18, Damage = 7, AiId = 26412 },
-			new SearchableActor { Name="Axe Knight", Hp = 32, Damage = 6, AiId = 17852  },
-			new SearchableActor { Name="Axe Knight Marble Gallery", Hp = 32, Damage = 6, AiId = 46300  },
-			//new SearchableActor { Name="Ouija Table", Hp = 20, Damage = 4, AiId = 48588 },
-			new SearchableActor { Name="Slinger", Hp = 12, Damage = 5, AiId = 30320  },
-			new SearchableActor { Name="Marionette", Hp = 20, Damage = 8, AiId = 26360 },
-			new SearchableActor { Hp = 5, Damage = 4, AiId = 48588  },
-			new SearchableActor { Name="Flea Man", Hp = 11, Damage = 9, AiId = 51080  },
-			new SearchableActor { Name="Skeleton Marble Gallery", Hp = 9, Damage = 2, AiId = 52040  },
-			new SearchableActor { Name="Skeleton Outer Wall", Hp = 9, Damage = 2, AiId = 54896 },
-			new SearchableActor { Name="Spear Guard Outer Wall", Hp = 20, Damage = 12, AiId = 14964  },
-			//new SearchableActor { Name="Bone Musket Outer Wall", Hp = 24, Damage = 12, AiId = 60200  },
-			new SearchableActor { Name="Blue Medusa Head Outer Wall", Hp = 12, Damage = 12, AiId = 22572 },
-			new SearchableActor { Name="Gold Medusa Head Outer Wall", Hp = 12, Damage = 7, AiId = 22536 },
-			new SearchableActor { Name="Dhuron", Hp = 32, Damage = 7, AiId = 49236 },
-			new SearchableActor { Name="Flea Man Library", Hp = 11, Damage = 9, AiId = 772  },
-			new SearchableActor { Name="Thronweed Library", Hp = 12, Damage = 10, AiId = 56172 },
-			new SearchableActor { Name="Flea Armor", Hp = 18, Damage = 17, AiId = 64000 },
-			//new SearchableActor { Name="Skeleton Ape Outer Wall", Hp = 10, Damage = 10, AiId = 18916 },
-			new SearchableActor { Name="Skeleton Archer Outer Wall", Hp = 10, Damage = 12, AiId = 1432  },
-			new SearchableActor { Name="Phantom Skull", Hp = 15, Damage = 14, AiId = 59616 },
-			new SearchableActor { Name="Gold Medusa Head Clock Tower", Hp = 12, Damage = 7, AiId = 916  },
-			new SearchableActor { Name="Blue Medusa Head Clock Tower", Hp = 12, Damage = 12, AiId = 952  },
-			new SearchableActor { Name="Harpy", Hp = 26, Damage = 18, AiId = 43308 },
-			new SearchableActor { Name="Karasuman Crow", Hp = 20, Damage = 32, AiId = 49128 },
-			new SearchableActor {Hp = 20, Damage = 32, AiId = 50472 },
-			new SearchableActor { Name="Flea Rider", Hp = 17, Damage = 18, AiId = 34488 },
-			new SearchableActor { Name="Blue Axe Knight Keep", Hp = 42, Damage = 10, AiId = 38568 },
-			new SearchableActor { Name="Black Crow", Hp = 15, Damage = 10, AiId = 16344  },
-			new SearchableActor { Name="Winged Guard", Hp = 15, Damage = 12, AiId = 14276 },
-			new SearchableActor { Name="Bone Halberd", Hp = 30, Damage = 12, AiId = 12196  },
-			new SearchableActor { Name="Bat Chapel", Hp = 1, Damage = 16, AiId = 15756 },
-			new SearchableActor { Name="Baby Hippogryph", Hp = 20, Damage = 10, AiId = 16340 },
-			new SearchableActor { Name="Skelerang Chapel", Hp = 18, Damage = 12, AiId = 18060 },
-			new SearchableActor { Name="Bloody Zombie Alchemy Lab", Hp = 24, Damage = 10, AiId = 21864 },
-			new SearchableActor { Name="Skelerang Olrox's Quarters", Hp = 18, Damage = 12, AiId = 11068 },
-			new SearchableActor { Name="Blade Soldier", Hp = 16, Damage = 15, AiId = 18404 },
-			new SearchableActor {Hp = 24, Damage = 12, AiId = 20436 },
-			new SearchableActor { Name="Bloody Zombie Olrox's Quarters", Hp = 24, Damage = 10, AiId = 15440 },
-			//new SearchableActor { Name="Olrox Bat", Hp = 13, Damage = 21, AiId = 64244 },
-			new SearchableActor { Name="Olrox Skull", Hp = 15, Damage = 23, AiId = 62980 },
-			new SearchableActor { Name="Spear Guard Caverns", Hp = 20, Damage = 12, AiId = 49068 },
-			new SearchableActor { Name="Bat Caverns", Hp = 1, Damage = 16, AiId = 36428 },
-			new SearchableActor { Name="Toad", Hp = 10, Damage = 14, AiId = 31116 },
-			//new SearchableActor { Name="Trapped Spear Guard Caverns", Hp = 20, Damage = 12, AiId = 33464 },
-			new SearchableActor { Name="Frog", Hp = 2, Damage = 13, AiId = 33204 },
-			new SearchableActor { Name="Gremlin Mines", Hp = 100, Damage = 20, AiId = 38856 },
-			new SearchableActor { Name="Gremlin Caverns", Hp = 100, Damage = 20, AiId = 8932 },
-			new SearchableActor { Name="Lossoth", Hp = 99, Damage = 18, AiId = 64232 },
-			new SearchableActor { Name="Thornweed Caverns", Hp = 12, Damage = 10, AiId = 22344 },
-			new SearchableActor { Name="Granfaloon Zombie", Hp = 10, Damage = 20, AiId = 17872 },
-			new SearchableActor {Hp = 22, Damage = 28, AiId = 10100 },
-			new SearchableActor { Name="Bomb Knight", Hp = 46, Damage = 37, AiId = 48728 },
-			new SearchableActor { Name="Gold Medusa Head Inverted Clock Tower", Hp = 12, Damage = 7, AiId = 45404 },
-			new SearchableActor { Name="Tombstone", Hp = 5, Damage = 40, AiId = 54652 },
-			new SearchableActor { Name="Balloon Pod", Hp = 3, Damage = 55, AiId = 18024 },
-			new SearchableActor { Name="Black Panther", Hp = 35, Damage = 45, AiId = 24640 },
-			new SearchableActor { Name="Imp", Hp = 43, Damage = 10, AiId = 14584 },
-			new SearchableActor { Name="Blue Medusa Head Death Wing's Lair", Hp = 12, Damage = 12, AiId = 45836 },
-			new SearchableActor { Name="Gold Medusa Head Death Wing's Lair", Hp = 12, Damage = 7, AiId = 45800 },
-			new SearchableActor { Name="Ghost Dancer", Hp = 30, Damage = 56, AiId = 43916 },
-			new SearchableActor { Name="Werewolf Inverted Colosseum", Hp = 280, Damage = 40, AiId = 29328 },
-			//new SearchableActor { Name="Zombie Trevor", Hp = 180, Damage = 40, AiId = 37884 },
-			new SearchableActor {Hp = 10, Damage = 66, AiId = 14076 },
-			new SearchableActor {Hp = 43, Damage = 10, AiId = 2536 },
-			new SearchableActor {Hp = 12, Damage = 7, AiId = 9876 },
-			new SearchableActor { Name="Corpseweed", Hp = 12, Damage = 10, AiId = 27132 },
-			new SearchableActor { Name="Schmoo", Hp = 50, Damage = 40, AiId = 64648 },
-			new SearchableActor { Name="Blue Venus Weed Rose", Hp = 1, Damage = 70, AiId = 33952 },
-			new SearchableActor {Hp = 46, Damage = 37, AiId = 39840 },
-			new SearchableActor {Hp = 10, Damage = 100, AiId = 38772 },
-			new SearchableActor { Name="Gaibon Inverted Mine", Hp = 200, Damage = 7, AiId = 27600 },
-			new SearchableActor { Name="Slogra Inverted Mine", Hp = 200, Damage = 6, AiId = 23676 },
-			new SearchableActor { Name="Death Sickle", Hp = 0, Damage = 55, AiId = 50968 },
-			new SearchableActor { Name="Bat Inverted Mine", Hp = 1, Damage = 16, AiId = 43228 },
-			new SearchableActor { Name="Thornweed Inverted Mine", Hp = 12, Damage = 10, AiId = 33052 },
-			new SearchableActor { Name="Bat Floating Catacombs", Hp = 1, Damage = 16, AiId = 15412 },
-			new SearchableActor { Name="Blood Skeleton Floating Catacombs", Hp = 9, Damage = 8, AiId = 7536  },
-			new SearchableActor { Name="Skeleton Floating Catacombs", Hp = 9, Damage = 2, AiId = 8684  }
+			0x6e,//Zombie
+			0x40,//Bat
+			0x69,//Bone Scimitawr
+			0xd,//Bloody Zombie
+			0xb4,//Corner Guard
+			//0x46,//Blood Skeleton
+			0x4b,//Skeleton
+			0x51,//Spittle Bone
+			0xf6,//Axe Knight
+			0x6,//Axe Knight Marble Gallery
+			0xb2,//Slinger
+			0x31,//Marionette
+			0xb,//Skelerang
+			0x9c,//Ghost
+			0x28,//Fleaman
+			0x12f,//Medusa Head
+			0x130,//Golden Medusa Head
+			0x5d,//Spear Guard
+			0x92,//Dhuron
+			0x9d,//Thornweed
+			0x29,//Flea Armor
+			0x43,//Phantom Skull
+			0xef,//Harpy
+			0x30,//Flea Rider
+			0x73,//Black Crow
+			0x80,//Winged Guard
+			0x76,//Bone Halberd
+			0x7c,//Blade Soldier
+			0x34,//Olrox Skull
+			0x6a,//Toad
+			0x6b,//Frog
+			0xe1,//Gremlin
+			0x83,//Lossoth
+			0x129,//Granfaloon Zombie
+			0xa5,//Bomb Knight
+			0x71,//Tombstone
+			0x11d,//Balloon Pod
+			0x25,//Black Panther
+			0x11c,//Imp
+			0xd8,//Ghost Dancer
+			0x182,//Minotaur
+			0x185,//Werewolf
+			0x145,//Beeezelbub Fly
+			0xb6,//Bitterfly
+			0x74,//Jack O' Bones
+			0x18b,//Blue Venus Weed Rose
+			//0xfe,//Gaibon
+			0x165,//Death Sickle
+			0x143//Schmoo
 		};
-		public static readonly List<SearchableActor> AcceptedRomhackHordeEnemies = new List<SearchableActor>
+		public static readonly List<ushort> EnduranceBosses = new List<ushort>
 		{
-			new SearchableActor {AiId = 25776 },
-			new SearchableActor {AiId = 25188 },
-			new SearchableActor {AiId = 23212  },
-			new SearchableActor {AiId = 42580  },
-			new SearchableActor {AiId = 4612 },
-			new SearchableActor {AiId = 14308  },
-			new SearchableActor {AiId = 31064  },
-			new SearchableActor {AiId = 24516 },
-			new SearchableActor {AiId = 26412 },
-			new SearchableActor {AiId = 17852  },
-			new SearchableActor {AiId = 46300  },
-			new SearchableActor {AiId = 48588 },
-			new SearchableActor {AiId = 30320  },
-			new SearchableActor {AiId = 26360 },
-			new SearchableActor {AiId = 48588  },
-			new SearchableActor {AiId = 51080  },
-			new SearchableActor {AiId = 52040  },
-			new SearchableActor {AiId = 54896 },
-			new SearchableActor {AiId = 14964  },
-			new SearchableActor {AiId = 60200  },
-			new SearchableActor {AiId = 22572 },
-			new SearchableActor {AiId = 49236 },
-			new SearchableActor {AiId = 772  },
-			new SearchableActor {AiId = 56172 },
-			new SearchableActor {AiId = 64000 },
-			new SearchableActor {AiId = 18916 },
-			new SearchableActor {AiId = 1432  },
-			new SearchableActor {AiId = 59616 },
-			new SearchableActor {AiId = 916  },
-			new SearchableActor {AiId = 43308 },
-			new SearchableActor {AiId = 50472 },
-			new SearchableActor {AiId = 34488 },
-			new SearchableActor {AiId = 38568 },
-			new SearchableActor {AiId = 16344  },
-			new SearchableActor {AiId = 14276 },
-			new SearchableActor {AiId = 12196  },
-			new SearchableActor {AiId = 15756 },
-			new SearchableActor {AiId = 18060 },
-			new SearchableActor {AiId = 21864 },
-			new SearchableActor {AiId = 11068 },
-			new SearchableActor {AiId = 18404 },
-			new SearchableActor {AiId = 20436 },
-			new SearchableActor {AiId = 15440 },
-			new SearchableActor {AiId = 49068 },
-			new SearchableActor {AiId = 36428 },
-			new SearchableActor {AiId = 31116 },
-			new SearchableActor {AiId = 33464 },
-			new SearchableActor {AiId = 33204 },
-			new SearchableActor {AiId = 38856 },
-			new SearchableActor {AiId = 8932 },
-			new SearchableActor {AiId = 64232 },
-			new SearchableActor {AiId = 22344 },
-			new SearchableActor {AiId = 17300 },
-			new SearchableActor {AiId = 10100 },
-			new SearchableActor {AiId = 48728 },
-			new SearchableActor {AiId = 45404 },
-			new SearchableActor {AiId = 54652 },
-			new SearchableActor {AiId = 18024 },
-			new SearchableActor {AiId = 24640 },
-			new SearchableActor {AiId = 14584 },
-			new SearchableActor {AiId = 45800 },
-			new SearchableActor {AiId = 43916 },
-			new SearchableActor {AiId = 29328 },
-			new SearchableActor {AiId = 14076 },
-			new SearchableActor {AiId = 2536 },
-			new SearchableActor {AiId = 9876 },
-			new SearchableActor {AiId = 27132 },
-			new SearchableActor {AiId = 64648 },
-			new SearchableActor {AiId = 33952 },
-			new SearchableActor {AiId = 39840 },
-			new SearchableActor {AiId = 38772 },
-			new SearchableActor {AiId = 27600 },
-			new SearchableActor {AiId = 23676 },
-			new SearchableActor {AiId = 43228 },
-			new SearchableActor {AiId = 33052 },
-			new SearchableActor {AiId = 15412 },
-			new SearchableActor {AiId = 7536  },
-			new SearchableActor {AiId = 8684  }
+			0xfe,//Gaibon
+			0xfd,//Dopple10
+			0x118,//Karasuman ---2nd castle
+			0x32,//Olrox
+			0x156,//Succubus
+			0x16b,//Cerberus
+			0X133,//Richter
+			0X111,//DarkwingBat
+			0x174,//Dopple40
+			0x16e,//Medusa
+			0x10b,//Akmodan
+			0x151,//Sypha
+			0x15f//Shaft
 		};
-		public static readonly List<SearchableActor> EnduranceBosses = new List<SearchableActor>
+		public static readonly List<ushort> EnduranceAlternateBosses = new List<ushort>
 		{
-			//new SearchableActor {Name = "Slogra", Hp = 200, Damage = 6, AiId = 18296},  //It always detects Slogra, experimenting with Gaibon clone instead
-			new SearchableActor {Name = "Gaibon", Hp = 200, Damage = 7, AiId = 22392},
-			new SearchableActor {Name = "Doppleganger 10", Hp = 120, Damage = 7, AiId = 14260},
-			//new SearchableActor {Name = "Minotaur", Hp = 300, Damage = 20, AiId = 9884},
-			//new SearchableActor {Name = "Werewolf", Hp = 260, Damage = 20, AiId = 14428},
-			new SearchableActor {Name = "Lesser Demon", Hp = 400, Damage = 20, AiId = 56036},
-			new SearchableActor {Name = "Karasuman", Hp = 500, Damage = 20, AiId = 43920},
-			//new SearchableActor {Name = "Hippogryph", Hp = 800, Damage = 18, AiId = 7188},  //Can trigger the door closing and locking the player on the wrong side.
-			new SearchableActor {Name = "Olrox", Hp = 666, Damage = 20, AiId = 54072},
-			new SearchableActor {Name = "Succubus", Hp = 666, Damage = 25, AiId = 8452},
-			new SearchableActor {Name = "Cerberus", Hp = 800, Damage = 20, AiId = 19772},
-			//new SearchableActor {Name = "Granfaloon", Hp = 400, Damage = 30, AiId = 6264},  //Only spawns core, no tentacles or shell
-			new SearchableActor {Name = "Richter", Hp = 400, Damage = 25, AiId = 27332},
-			new SearchableActor {Name = "Darkwing Bat", Hp = 600, Damage = 35, AiId = 40376},
-			//new SearchableActor {Name = "Creature", Hp = 1100, Damage = 30, AiId = 31032},//Hammer doesn't have hitbox and body only does 1 damage
-			new SearchableActor {Name = "Doppleganger 40", Hp = 777, Damage = 35, AiId = 11664},
-			//new SearchableActor {Name = "Death", Hp = 888, Damage = 35, AiId = 46380},
-			//new SearchableActor {Name = "Medusa", Hp = 1100, Damage = 35, AiId = 6044},
-			new SearchableActor {Name = "Akmodan", Hp = 1200, Damage = 40, AiId = 16564},
-			new SearchableActor {Name = "Sypha", Hp = 1000, Damage = 9, AiId = 30724},
-			new SearchableActor {Name = "Shaft", Hp = 1300, Damage = 40, AiId = 43772}
+			0xce,//Werewolf
+			0x17,//LesserDemon
+			0x12c,//Hippo
+			0X11F,//Scylla
+			0x127,//Gran
+			0x172,//Creature
+			0x164,//Death
+			0x144,//Beez
+			0x17b,//Drac
 		};
-		public static readonly List<SearchableActor> EnduranceAlternateBosses = new List<SearchableActor>
+		public static readonly Dictionary<ushort, string> EnduranceBossNames = new Dictionary<ushort, string>
 		{
-			new SearchableActor {Name = "Werewolf", Hp = 260, Damage = 20, AiId = 14428},
-			new SearchableActor {Name = "Hippogryph", Hp = 800, Damage = 18, AiId = 7188},
-			new SearchableActor {Name = "Scylla", Hp = 200, Damage = 16, AiId = 10988},
-			new SearchableActor {Name = "Granfaloon", Hp = 400, Damage = 30, AiId = 6264},
-			new SearchableActor {Name = "Medusa", Hp = 1100, Damage = 35, AiId = 6044},
-			new SearchableActor {Name = "Creature", Hp = 1100, Damage = 30, AiId = 31032},
-			new SearchableActor {Name = "Death", Hp = 888, Damage = 35, AiId = 46380},
-			new SearchableActor {Name = "Beelzebub", Hp = 2000, Damage = 60, AiId = 11356},
-			new SearchableActor {Name = "Dracula", Hp = 10000, Damage = 39, AiId = 56220},
+			{ 0xfe, "Gaibon" },
+			{ 0xfd, "Doppleganger 10" },
+			{ 0xce, "Werewolf" },
+			{ 0xcb, "Minotaur" },
+			{ 0x17, "LesserDemon" },
+			{ 0x118, "Karasuman" },
+			{ 0x32, "Olrox" },
+			{ 0x156, "Succubus" },
+			{ 0x16b, "Cerberus" },
+			{ 0X133, "Richter" },
+			{ 0X111, "Darkwing Bat" },
+			{ 0x174, "Doppleganger 40" },
+			{ 0x16e, "Medusa" },
+			{ 0x10b, "Akmodan" },
+			{ 0x151, "Sypha" },
+			{ 0x15f, "Shaft" },
+			{ 0x12c, "Hippogryph" },
+			{ 0X11F, "Scylla" },
+			{ 0x127, "Granfaloon" },
+			{ 0x172, "Creature" },
+			{ 0x164, "Death" },
+			{ 0x144, "Beezelbub" },
+			{ 0x17b, "Dracula" },
 		};
-		public static readonly List<SearchableActor> EnduranceRomhackBosses = new List<SearchableActor>
-		{
-			new SearchableActor {Name = "Gaibon", AiId = 22392},
-			new SearchableActor {Name = "Doppleganger 10", AiId = 14260},
-			new SearchableActor {Name = "Minotaur", AiId = 9884},
-			new SearchableActor {Name = "Werewolf", AiId = 14428},
-			new SearchableActor {Name = "Lesser Demon", AiId = 56036},
-			new SearchableActor {Name = "Karasuman", AiId = 43920},
-			new SearchableActor {Name = "Olrox", AiId = 54072},
-			new SearchableActor {Name = "Succubus", AiId = 8452},
-			new SearchableActor {Name = "Cerberus", AiId = 19772},
-			new SearchableActor {Name = "Richter", AiId = 27332},
-			new SearchableActor {Name = "Darkwing Bat", AiId = 40376},
-			new SearchableActor {Name = "Creature", AiId = 31032},
-			new SearchableActor {Name = "Doppleganger 40", AiId = 11664},
-			new SearchableActor {Name = "Medusa", AiId = 6044},
-			new SearchableActor {Name = "Akmodan", AiId = 16564},
-			new SearchableActor {Name = "Sypha", AiId = 30724},
-			new SearchableActor {Name = "Shaft", AiId = 43772}
-		};
-		public static readonly List<SearchableActor> EnduranceAlternateRomhackBosses = new List<SearchableActor>
-		{
-			new SearchableActor {Name = "Hippogryph", AiId = 7188},
-			new SearchableActor {Name = "Scylla", AiId = 10988},
-			new SearchableActor {Name = "Granfaloon", AiId = 6264},
-			new SearchableActor {Name = "Creature", AiId = 31032},
-			new SearchableActor {Name = "Death", AiId = 46380},
-			new SearchableActor {Name = "Beelzebub", AiId = 11356},
-			new SearchableActor {Name = "Dracula", AiId = 56220},
-		};
-		public static readonly SearchableActor DraculaActor = new SearchableActor { Hp = 10000, Damage = 39, AiId = 56220 };
-		public static readonly SearchableActor GalamothTorsoActor = new SearchableActor { Hp = 12000, Damage = 50, AiId = 23936 };
-		public static readonly SearchableActor GalamothHeadActor = new SearchableActor { Hp = 32767, Damage = 50, AiId = 31516 };
-		public static readonly SearchableActor GalamothPartsActors = new SearchableActor { Hp = 12000, Damage = 50, AiId = 31516 };
-		public static readonly SearchableActor ShaftOrbActor = new SearchableActor { Hp = 10, Damage = 0, AiId = 0, };
+		public static readonly ushort GalamothTorsoId = 0xc6;
+		public static readonly ushort GalamothHeadId = 0xc7;
+		public static readonly ushort GalamothPartsId = 0xc6;
+		public static readonly ushort ShaftOrbId = 0x0147;
+		public static readonly ushort DoorId = 0x0003;
 
-		public static readonly string[] RandomNames =
-	   {
-			"Josh",
-			"Jimmy",
-			"Steve",
-			"John",
-			"Jack",
-			"Nick",
-			"Tony",
-			"Tom",
-			"James",
-			"Rob",
-			"Mike",
-			"Will",
-			"Charlie",
-			"Chris",
-			"Matt",
-			"Mark",
-			"Paul",
-			"Kenny",
-			"Kevin",
-			"Karen",
-			"Mary",
-			"Mimi",
-			"Linda",
-			"Sarah",
-			"Lisa",
-			"Emily",
-		};
-
-		public static readonly SearchableActor SpiritActor = new SearchableActor { Hp = 0, AiId = 39012 };
-		public const uint SpiritPalette = 0x5B;
+		public static readonly List<Entity> SpiritProperties = new List<Entity> { new Entity { EnemyId = 0x3, ObjectId = 0x3D } };
+		public const byte SpiritPalette = 0x79;
 		public const uint SpiritLockOn = 2;
 		public const string SpiritLockOnName = "SpiritLockOn";
 		public const uint WhiteTigerBallSpeedLeft = 0xFFFF;
@@ -434,9 +275,128 @@ namespace SotnKhaosTools.Constants
 		public const int BloodthirstColorPalette = 33126;
 		public const int OverdriveColorPalette = 33127;
 		public const int QuadColorPalette = 33122;
+		public const double SmallBulletSpeed = 0.7;
 
-		public static readonly List<byte> FireballEntityBytes = new List<byte> { 0x00, 0xC0, 0xB2, 0x00, 0x00, 0x00, 0xB3, 0x00, 0x00, 0x80, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x96, 0x00, 0x1A, 0x00, 0xDC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x08, 0x00, 0x00, 0x03, 0x00, 0x02, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x80, 0x00, 0x00, 0x04, 0x04, 0x00, 0x14, 0x00, 0x00, 0x98, 0x07, 0x0B, 0x80, 0x04, 0x00, 0x01, 0x00, 0x09, 0x00, 0x05, 0x00, 0x08 };
-		public static readonly List<byte> DarkFireballEntityBytes = new List<byte> { 0xE0, 0xBE, 0x7D, 0x00, 0x00, 0x00, 0xAF, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x96, 0x00, 0x1B, 0x00, 0x40, 0x78, 0x12, 0x80, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x08, 0x00, 0x00, 0x03, 0x00, 0x02, 0x00, 0x00, 0x00, 0x21, 0x00, 0x00, 0x80, 0x00, 0x00, 0x08, 0x08, 0x00, 0x04, 0x00, 0x00, 0xC8, 0x07, 0x0B, 0x80, 0x17, 0x00, 0x01, 0x00, 0x09, 0x00, 0x09, 0x00, 0x08 };
+		public static readonly Entity KillEntity = new Entity { HitboxWidth = 0xFF, HitboxHeight = 0xFF, DamageType = Entities.Slam, Damage = 999, EnemyId = 0x8F };
+		public static readonly Entity PoisonEntity = new Entity { HitboxWidth = 0xFF, HitboxHeight = 0xFF, DamageType = Entities.Poison, Damage = 1, HitboxState = 1, EnemyId = 0x8F };
+		public static readonly Entity StoneEntity = new Entity { HitboxWidth = 0xFF, HitboxHeight = 0xFF, DamageType = Entities.Stone, Damage = 1, HitboxState = 1, EnemyId = 0x8F };
+		public static readonly Entity CurseEntity = new Entity { HitboxWidth = 0xFF, HitboxHeight = 0xFF, DamageType = Entities.Curse, Damage = 1, HitboxState = 1, EnemyId = 0x8F };
+		public static readonly Entity SlamEntity = new Entity { HitboxWidth = 0xFF, HitboxHeight = 0xFF, DamageType = Entities.Slam, Damage = 1, HitboxState = 1, EnemyId = 0x8F };
+		public static readonly Entity StandEntity = new Entity { Palette = 0x005C, ZPriority = 0x0094, Flags = 0x08020000, AnimationSet = 0x01, Unk5A = 0x0B};
+		public static readonly Entity DarkFireballEntity = new Entity
+		{
+			Xpos = 125d,
+			Ypos = 125d,
+			AccelerationX = 0,
+			Palette = 0x0003,
+			DrawFlags = 0x04,
+			RotZ = 0x0800,
+			ZPriority = 0x0096,
+			ObjectId = 0x001B,
+			UpdateFunctionAddress = 0x80127840,
+			Step = 0x0001,
+			Flags = 0x08100000,
+			EnemyId = 0x0003,
+			HitboxState = 0x0002,
+			Damage = 0x0021,
+			DamageType = 0x80,
+			HitboxWidth = 0x08,
+			HitboxHeight = 0x08,
+			InvincibilityFrames = 0x04,
+			AnimationFunctionAddress = 0x800B07C8,
+			AnimationFrameIndex = 0x0017,
+			AnimationFrameDuration = 0x0001,
+			AnimationSet = 0x0009,
+			AnimationCurrentFrame = 0x0009,
+			StunFrames = 0x0008
+		};
+		public static readonly Entity FireballEntity = new Entity
+		{
+			Xpos = 125d,
+			Ypos = 125d,
+			AccelerationX = 1d,
+			Palette = 0x0000,
+			DrawFlags = 0x00,
+			ZPriority = 0x0096,
+			ObjectId = 0x001A,
+			UpdateFunctionAddress = 0x000000DC,
+			Step = 0x0000,
+			Flags = 0x08010000,
+			EnemyId = 0x0003,
+			HitboxState = 0x0002,
+			Damage = 0x0021,
+			DamageType = 0x80,
+			HitboxWidth = 0x04,
+			HitboxHeight = 0x04,
+			InvincibilityFrames = 0x14,
+			AnimationFunctionAddress = 0x800B0798,
+			AnimationFrameIndex = 0x0004,
+			AnimationFrameDuration = 0x0001,
+			AnimationSet = 0x0009,
+			AnimationCurrentFrame = 0x0005,
+			StunFrames = 0x0008
+		};
+		public static readonly Entity FlowerBullet = new Entity
+		{
+			Palette = 0x0024,
+			HitboxWidth = 1,
+			HitboxHeight = 1,
+			Damage = 20,
+			DamageType = 2,
+			InvincibilityFrames = 1,
+			ZPriority = 0x00FF,
+			AnimationFrameIndex = 0x0001,
+			AnimationSet = 0x0004,
+			AnimationCurrentFrame = 0x0001,
+			//AnimationFrameDuration = 0x0004,
+			HitboxState = 0x1,
+			EnemyId = 0x8F
+		};
+		public static readonly Entity ZigZagBullet = new Entity
+		{
+			Palette = 0x0025,
+			HitboxWidth = 1,
+			HitboxHeight = 1,
+			Damage = 20,
+			DamageType = 2,
+			InvincibilityFrames = 1,
+			ZPriority = 0x00FF,
+			AnimationFrameIndex = 0x0001,
+			AnimationSet = 0x0004,
+			AnimationCurrentFrame = 0x0003,
+			HitboxState = 0x1,
+			EnemyId = 0x8F
+		};
+		public static readonly Entity JailBullet = new Entity
+		{
+			Palette = 0x006,
+			HitboxWidth = 1,
+			HitboxHeight = 1,
+			Damage = 20,
+			DamageType = 2,
+			InvincibilityFrames = 1,
+			ZPriority = 0x00FF,
+			AnimationFrameIndex = 0x0001,
+			AnimationSet = 0x0004,
+			AnimationCurrentFrame = 0x0004,
+			HitboxState = 0x1,
+			EnemyId = 0x8F
+		};
+		public static readonly Entity DiamondBullet = new Entity
+		{
+			Palette = 0x002,
+			HitboxWidth = 1,
+			HitboxHeight = 1,
+			Damage = 20,
+			DamageType = 2,
+			InvincibilityFrames = 1,
+			ZPriority = 0x00FF,
+			AnimationFrameIndex = 0x0001,
+			AnimationSet = 0x0004,
+			AnimationCurrentFrame = 0x0002,
+			HitboxState = 0x1,
+			EnemyId = 0x8F
+		};
 
 		public static readonly string[] AcceptedMusicTrackTitles =
 	   {

@@ -41,24 +41,18 @@ namespace SotnKhaosTools
             this.windowGroup = new System.Windows.Forms.GroupBox();
             this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
             this.optionsGroup = new System.Windows.Forms.GroupBox();
-            this.autosplitterCheckBox = new System.Windows.Forms.CheckBox();
-            this.overlayCheckBox = new System.Windows.Forms.CheckBox();
-            this.replaysCheckBox = new System.Windows.Forms.CheckBox();
             this.locationsCheckbox = new System.Windows.Forms.CheckBox();
             this.customSeedGroup = new System.Windows.Forms.GroupBox();
             this.customLocationsSpreadRadio = new System.Windows.Forms.RadioButton();
             this.customLocationsClassicRadio = new System.Windows.Forms.RadioButton();
             this.customLocationsEquipmentRadio = new System.Windows.Forms.RadioButton();
             this.customLocationsGuardedRadio = new System.Windows.Forms.RadioButton();
-            this.username = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.trackerDerfaultsButton = new System.Windows.Forms.Button();
             this.relicDisplayGroup.SuspendLayout();
             this.layoutGroup.SuspendLayout();
             this.windowGroup.SuspendLayout();
             this.optionsGroup.SuspendLayout();
             this.customSeedGroup.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // autotrackerPanelTitle
@@ -191,9 +185,6 @@ namespace SotnKhaosTools
             // 
             // optionsGroup
             // 
-            this.optionsGroup.Controls.Add(this.autosplitterCheckBox);
-            this.optionsGroup.Controls.Add(this.overlayCheckBox);
-            this.optionsGroup.Controls.Add(this.replaysCheckBox);
             this.optionsGroup.Controls.Add(this.locationsCheckbox);
             this.optionsGroup.ForeColor = System.Drawing.Color.White;
             this.optionsGroup.Location = new System.Drawing.Point(206, 56);
@@ -202,39 +193,6 @@ namespace SotnKhaosTools
             this.optionsGroup.TabIndex = 6;
             this.optionsGroup.TabStop = false;
             this.optionsGroup.Text = "Options";
-            // 
-            // autosplitterCheckBox
-            // 
-            this.autosplitterCheckBox.AutoSize = true;
-            this.autosplitterCheckBox.Location = new System.Drawing.Point(6, 65);
-            this.autosplitterCheckBox.Name = "autosplitterCheckBox";
-            this.autosplitterCheckBox.Size = new System.Drawing.Size(117, 17);
-            this.autosplitterCheckBox.TabIndex = 3;
-            this.autosplitterCheckBox.Text = "Enable Autosplitter";
-            this.autosplitterCheckBox.UseVisualStyleBackColor = true;
-            this.autosplitterCheckBox.CheckedChanged += new System.EventHandler(this.autosplitterCheckBox_CheckedChanged);
-            // 
-            // overlayCheckBox
-            // 
-            this.overlayCheckBox.AutoSize = true;
-            this.overlayCheckBox.Location = new System.Drawing.Point(6, 88);
-            this.overlayCheckBox.Name = "overlayCheckBox";
-            this.overlayCheckBox.Size = new System.Drawing.Size(83, 17);
-            this.overlayCheckBox.TabIndex = 2;
-            this.overlayCheckBox.Text = "Use overlay";
-            this.overlayCheckBox.UseVisualStyleBackColor = true;
-            this.overlayCheckBox.CheckedChanged += new System.EventHandler(this.overlayCheckBox_CheckedChanged);
-            // 
-            // replaysCheckBox
-            // 
-            this.replaysCheckBox.AutoSize = true;
-            this.replaysCheckBox.Location = new System.Drawing.Point(6, 44);
-            this.replaysCheckBox.Name = "replaysCheckBox";
-            this.replaysCheckBox.Size = new System.Drawing.Size(88, 17);
-            this.replaysCheckBox.TabIndex = 1;
-            this.replaysCheckBox.Text = "Save replays";
-            this.replaysCheckBox.UseVisualStyleBackColor = true;
-            this.replaysCheckBox.CheckedChanged += new System.EventHandler(this.replaysCheckBox_CheckedChanged);
             // 
             // locationsCheckbox
             // 
@@ -309,26 +267,6 @@ namespace SotnKhaosTools
             this.customLocationsGuardedRadio.UseVisualStyleBackColor = true;
             this.customLocationsGuardedRadio.CheckedChanged += new System.EventHandler(this.customLocationsGuardedRadio_CheckedChanged);
             // 
-            // username
-            // 
-            this.username.Location = new System.Drawing.Point(6, 19);
-            this.username.Name = "username";
-            this.username.Size = new System.Drawing.Size(170, 21);
-            this.username.TabIndex = 5;
-            this.username.TextChanged += new System.EventHandler(this.username_TextChanged);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.username);
-            this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(206, 169);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(181, 49);
-            this.groupBox1.TabIndex = 8;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Tag = "Username";
-            this.groupBox1.Text = "Username";
-            // 
             // trackerDerfaultsButton
             // 
             this.trackerDerfaultsButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
@@ -351,7 +289,6 @@ namespace SotnKhaosTools
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
             this.Controls.Add(this.trackerDerfaultsButton);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.customSeedGroup);
             this.Controls.Add(this.optionsGroup);
             this.Controls.Add(this.windowGroup);
@@ -375,8 +312,6 @@ namespace SotnKhaosTools
             this.optionsGroup.PerformLayout();
             this.customSeedGroup.ResumeLayout(false);
             this.customSeedGroup.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -397,15 +332,10 @@ namespace SotnKhaosTools
         private System.Windows.Forms.CheckBox alwaysOnTopCheckBox;
 		private System.Windows.Forms.GroupBox optionsGroup;
 		private System.Windows.Forms.CheckBox locationsCheckbox;
-		private System.Windows.Forms.CheckBox replaysCheckBox;
 		private System.Windows.Forms.GroupBox customSeedGroup;
 		private System.Windows.Forms.RadioButton customLocationsClassicRadio;
 		private System.Windows.Forms.RadioButton customLocationsEquipmentRadio;
 		private System.Windows.Forms.RadioButton customLocationsGuardedRadio;
-		private System.Windows.Forms.TextBox username;
-		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.CheckBox overlayCheckBox;
-		private System.Windows.Forms.CheckBox autosplitterCheckBox;
 		private System.Windows.Forms.RadioButton customLocationsSpreadRadio;
 		private System.Windows.Forms.Button trackerDerfaultsButton;
 	}

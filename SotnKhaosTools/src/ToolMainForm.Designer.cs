@@ -32,10 +32,7 @@ namespace SotnKhaosTools
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ToolMainForm));
             this.mainMenuPanel = new System.Windows.Forms.Panel();
             this.autotrackerSelect = new System.Windows.Forms.Button();
-            this.aboutButton = new System.Windows.Forms.Button();
-            this.multiplayerLaunch = new System.Windows.Forms.Button();
             this.khaosChatLaunch = new System.Windows.Forms.Button();
-            this.multiplayerSelect = new System.Windows.Forms.Button();
             this.khaosChatSelect = new System.Windows.Forms.Button();
             this.autotrackerLaunch = new System.Windows.Forms.Button();
             this.mainMenuPanel.SuspendLayout();
@@ -44,10 +41,7 @@ namespace SotnKhaosTools
             // mainMenuPanel
             // 
             this.mainMenuPanel.Controls.Add(this.autotrackerSelect);
-            this.mainMenuPanel.Controls.Add(this.aboutButton);
-            this.mainMenuPanel.Controls.Add(this.multiplayerLaunch);
             this.mainMenuPanel.Controls.Add(this.khaosChatLaunch);
-            this.mainMenuPanel.Controls.Add(this.multiplayerSelect);
             this.mainMenuPanel.Controls.Add(this.khaosChatSelect);
             this.mainMenuPanel.Controls.Add(this.autotrackerLaunch);
             this.mainMenuPanel.Dock = System.Windows.Forms.DockStyle.Top;
@@ -75,42 +69,6 @@ namespace SotnKhaosTools
             this.autotrackerSelect.UseVisualStyleBackColor = false;
             this.autotrackerSelect.Click += new System.EventHandler(this.autotrackerSelect_Click);
             // 
-            // aboutButton
-            // 
-            this.aboutButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(0)))), ((int)(((byte)(35)))));
-            this.aboutButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.aboutButton.Cursor = System.Windows.Forms.Cursors.Default;
-            this.aboutButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.aboutButton.FlatAppearance.BorderSize = 2;
-            this.aboutButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.aboutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.aboutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.aboutButton.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.aboutButton.Image = global::SotnKhaosTools.Properties.Resources.VectorSimple;
-            this.aboutButton.Location = new System.Drawing.Point(294, 12);
-            this.aboutButton.Name = "aboutButton";
-            this.aboutButton.Size = new System.Drawing.Size(88, 70);
-            this.aboutButton.TabIndex = 4;
-            this.aboutButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.aboutButton.UseVisualStyleBackColor = false;
-            this.aboutButton.Click += new System.EventHandler(this.aboutButton_Click);
-            // 
-            // multiplayerLaunch
-            // 
-            this.multiplayerLaunch.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.multiplayerLaunch.FlatAppearance.BorderSize = 2;
-            this.multiplayerLaunch.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.multiplayerLaunch.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.multiplayerLaunch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.multiplayerLaunch.Location = new System.Drawing.Point(200, 88);
-            this.multiplayerLaunch.Name = "multiplayerLaunch";
-            this.multiplayerLaunch.Size = new System.Drawing.Size(87, 29);
-            this.multiplayerLaunch.TabIndex = 3;
-            this.multiplayerLaunch.Text = "Launch Co-Op";
-            this.multiplayerLaunch.UseVisualStyleBackColor = true;
-            this.multiplayerLaunch.Visible = false;
-            this.multiplayerLaunch.Click += new System.EventHandler(this.multiplayerLaunch_Click);
-            // 
             // khaosChatLaunch
             // 
             this.khaosChatLaunch.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
@@ -126,25 +84,6 @@ namespace SotnKhaosTools
             this.khaosChatLaunch.UseVisualStyleBackColor = true;
             this.khaosChatLaunch.Visible = false;
             this.khaosChatLaunch.Click += new System.EventHandler(this.khaosChatLaunch_Click);
-            // 
-            // multiplayerSelect
-            // 
-            this.multiplayerSelect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(0)))), ((int)(((byte)(35)))));
-            this.multiplayerSelect.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.multiplayerSelect.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.multiplayerSelect.FlatAppearance.BorderSize = 2;
-            this.multiplayerSelect.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.multiplayerSelect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.multiplayerSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.multiplayerSelect.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.multiplayerSelect.Image = global::SotnKhaosTools.Properties.Resources.coop;
-            this.multiplayerSelect.Location = new System.Drawing.Point(200, 12);
-            this.multiplayerSelect.Name = "multiplayerSelect";
-            this.multiplayerSelect.Size = new System.Drawing.Size(88, 70);
-            this.multiplayerSelect.TabIndex = 2;
-            this.multiplayerSelect.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.multiplayerSelect.UseVisualStyleBackColor = false;
-            this.multiplayerSelect.Click += new System.EventHandler(this.multiplayerSelect_Click);
             // 
             // khaosChatSelect
             // 
@@ -179,7 +118,6 @@ namespace SotnKhaosTools
             this.autotrackerLaunch.TabIndex = 1;
             this.autotrackerLaunch.Text = "Launch Tracker";
             this.autotrackerLaunch.UseVisualStyleBackColor = true;
-            this.autotrackerLaunch.Visible = false;
             this.autotrackerLaunch.Click += new System.EventHandler(this.autotrackerLaunch_Click);
             // 
             // ToolMainForm
@@ -209,11 +147,8 @@ namespace SotnKhaosTools
 
         private System.Windows.Forms.Panel mainMenuPanel;
         private System.Windows.Forms.Button autotrackerLaunch;
-        private System.Windows.Forms.Button multiplayerLaunch;
         private System.Windows.Forms.Button khaosChatLaunch;
-        private System.Windows.Forms.Button multiplayerSelect;
         private System.Windows.Forms.Button khaosChatSelect;
-        private System.Windows.Forms.Button aboutButton;
         private System.Windows.Forms.Button autotrackerSelect;
 	}
 }

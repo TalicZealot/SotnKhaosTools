@@ -5,19 +5,14 @@ namespace SotnKhaosTools.Khaos.Interfaces
 {
 	internal interface IKhaosController
 	{
-		//public void EnqueueAction(EventAddAction eventData);
 		bool AutoKhaosOn { get; set; }
 		bool SpeedLocked { get; set; }
 		bool ManaLocked { get; set; }
 		bool InvincibilityLocked { get; set; }
 		bool SpawnActive { get; set; }
-		bool ShaftHpSet { get; set; }
-		bool GalamothStatsSet { get; set; }
 		bool PandoraUsed { get; set; }
-		int TotalMeterGained { get; set; }
-		uint AlucardMapX { get; set; }
-		uint AlucardMapY { get; set; }
-		public bool IsInRoomList(List<MapLocation> rooms);
+		public bool ActionViable();
+		public bool FastActionViable();
 		public void GainKhaosMeter(short meter);
 		void Bankrupt(string user = "Khaos");
 		void BattleOrders(string user = "Khaos");
@@ -29,15 +24,14 @@ namespace SotnKhaosTools.Khaos.Interfaces
 		void Haste(string user = "Khaos");
 		void HeavytHelp(string user = "Khaos");
 		void HnK(string user = "Khaos");
+		void BulletHell(string user = "Khaos");
 		void Horde(string user = "Khaos");
 		void KhaosEquipment(string user = "Khaos");
 		void KhaosRelics(string user = "Khaos");
 		void KhaosStats(string user = "Khaos");
 		void KhaosStatus(string user = "Khaos");
 		void KhaosTrack(string track, string user = "Khaos");
-		void KhaoticBurst(string user = "Khaos");
 		void LightHelp(string user = "Khaos");
-		void Lord(string user = "Khaos");
 		void Magician(string user = "Khaos");
 		void MediumHelp(string user = "Khaos");
 		void MeltyBlood(string user = "Khaos");
@@ -46,15 +40,10 @@ namespace SotnKhaosTools.Khaos.Interfaces
 		void Slow(string user = "Khaos");
 		void StartKhaos();
 		void StopKhaos();
-		void SubweaponsOnly(string user = "Khaos");
 		void Thirst(string user = "Khaos");
 		void Update();
 		void Quad(string user = "Khaos");
 		void Weaken(string user = "Khaos");
 		void ZaWarudo(string user = "Khaos");
-		void SetShaftHp();
-		void SetGalamothtStats();
-		void CheckMainMenu();
-		void CheckCastleChanged();
 	}
 }

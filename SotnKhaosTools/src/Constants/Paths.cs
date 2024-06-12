@@ -10,6 +10,7 @@ namespace SotnKhaosTools.Constants
 		public const string DeathLaughSound = "./ExternalTools/SotnKhaosTools/Sounds/DeathLaugh.mp3";
 		public const string RichterLaughSound = "./ExternalTools/SotnKhaosTools/Sounds/RichterLaugh.mp3";
 		public const string FairyPotionSound = "./ExternalTools/SotnKhaosTools/Sounds/FairyPotion.mp3";
+		public const string Cristal = "./ExternalTools/SotnKhaosTools/Sounds/Cristal.mp3";
 		public const string MeltySound = "./ExternalTools/SotnKhaosTools/Sounds/Melty.mp3";
 		public const string DragonInstallSound = "./ExternalTools/SotnKhaosTools/Sounds/DragonInstall.mp3";
 		public const string ZaWarudoSound = "./ExternalTools/SotnKhaosTools/Sounds/ZaWarudo.mp3";
@@ -23,6 +24,15 @@ namespace SotnKhaosTools.Constants
 		public const string BattleOrdersSound = "./ExternalTools/SotnKhaosTools/Sounds/BattleOrders.mp3";
 		public const string QuadSound = "./ExternalTools/SotnKhaosTools/Sounds/Quad.mp3";
 		public const string ExcellentSound = "./ExternalTools/SotnKhaosTools/Sounds/Excellent.mp3";
+		public const string Stand = "./ExternalTools/SotnKhaosTools/Sounds/Stand.mp3";
+		public const string LarisaLaugh = "./ExternalTools/SotnKhaosTools/Sounds/LarisaLaugh.mp3";
+		public const string Messatsu = "./ExternalTools/SotnKhaosTools/Sounds/Messatsu.mp3";
+		public const string GeneiJin = "./ExternalTools/SotnKhaosTools/Sounds/GeneiJin.mp3";
+		public const string Speed = "./ExternalTools/SotnKhaosTools/Sounds/Speed.mp3";
+		public const string PotionDrink = "./ExternalTools/SotnKhaosTools/Sounds/PotionDrink.mp3";
+		public const string Thunderstorm = "./ExternalTools/SotnKhaosTools/Sounds/Thunderstorm.mp3";
+		public const string MariaHelp = "./ExternalTools/SotnKhaosTools/Sounds/MariaHelp.mp3";
+		public const string Horde = "./ExternalTools/SotnKhaosTools/Sounds/Horde.mp3";
 
 		public const string NamesFilePath = "./ExternalTools/SotnKhaosTools/Khaos/names.txt";
 
@@ -46,6 +56,7 @@ namespace SotnKhaosTools.Constants
 		public const string WarpsAndShortcutsWatchPath = "./ExternalTools/SotnKhaosTools/Watches/WarpsAndShortcuts.wch";
 
 		public const string ImagesPath = "./ExternalTools/SotnKhaosTools/Images/";
+		public const string CombinedTexture = "./ExternalTools/SotnKhaosTools/Images/texture.png";
 		public const string TextboxImage = "./ExternalTools/SotnKhaosTools/Images/SotnTextBox.png";
 		public const string IconVermillionBird = "./ExternalTools/SotnKhaosTools/Images/VermillionBird.png";
 		public const string IconWhiteTiger = "./ExternalTools/SotnKhaosTools/Images/WhiteTiger.png";
@@ -85,21 +96,19 @@ namespace SotnKhaosTools.Constants
 			{"EyeOfVlad", "./ExternalTools/SotnKhaosTools/Images/EyeOfVlad.png"}
 		};
 
-		public const string LogsPath = "./ExternalTools/SotnKhaosTools/Logs/";
-		public const string ReplaysPath = "./ExternalTools/SotnKhaosTools/Replays/";
 		public const string ChangeLogPath = @"\ExternalTools\SotnKhaosTools\ChangeLog.txt";
 
 		public const string CasualPresetPath = "./ExternalTools/SotnKhaosTools/Presets/casual.json";
 		public const string SafePresetPath = "./ExternalTools/SotnKhaosTools/Presets/safe.json";
 		public const string SpeedrunPresetPath = "./ExternalTools/SotnKhaosTools/Presets/speedrun.json";
 		public const string BatMasterPresetPath = "./ExternalTools/SotnKhaosTools/Presets/bat-master.json";
+		public const string PresetPath = "./ExternalTools/SotnRandoTools/Presets/";
 
 		public const string ConfigPath = "./ExternalTools/SotnKhaosTools/ToolConfig.ini";
 		public const string SeedInfoPath = "./ExternalTools/SotnKhaosTools/TrackerOverlay/SeedInfo.txt";
 		public const string CheatsPath = "./ExternalTools/SotnKhaosTools/Cheats/Cheats.cht";
 		public const string CheatsBackupPath = "./ExternalTools/SotnKhaosTools/Cheats/Cheats.cht.bkp";
 
-		public const string KhaosDatabase = "./ExternalTools/SotnKhaosTools/Khaos/Khaos.db";
 		public const string TwitchRedirectUri = "http://localhost:8080/redirect/";
 	}
 }

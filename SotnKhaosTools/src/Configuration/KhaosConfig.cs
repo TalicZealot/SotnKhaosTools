@@ -7,7 +7,6 @@ namespace SotnKhaosTools.Configuration
 {
 	public class KhaosConfig
 	{
-		//TODO: add profiles
 		public KhaosConfig()
 		{
 			Default();
@@ -24,6 +23,8 @@ namespace SotnKhaosTools.Configuration
 		public int PandoraMinItems { get; set; }
 		public int PandoraMaxItems { get; set; }
 		public int MeterOnReset { get; set; }
+		public int MinimumBits { get; set; }
+		public int BitsChoice { get; set; }
 		public string AutoKhaosDifficulty { get; set; }
 		public System.TimeSpan QueueInterval { get; set; }
 		public bool DynamicInterval { get; set; }
@@ -32,7 +33,6 @@ namespace SotnKhaosTools.Configuration
 		public string[] LightHelpItemRewards { get; set; }
 		public string[] MediumHelpItemRewards { get; set; }
 		public string[] HeavyHelpItemRewards { get; set; }
-		public bool RomhackMode { get; set; }
 
 		public void DefaultActions()
 		{
@@ -44,7 +44,6 @@ namespace SotnKhaosTools.Configuration
 					Meter = 2,
 					AlertPath = Paths.AlucardWhatSound,
 					Cooldown = new System.TimeSpan(0, 0, 20),
-					Bits = 10,
 					ChannelPoints = 100,
 					MaximumChannelPoints = 300,
 					Scaling = 1.02
@@ -56,7 +55,6 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.AlucardWhatSound,
 					Cooldown = new System.TimeSpan(0, 35, 0),
 					StartsOnCooldown = true,
-					Bits = 20,
 					ChannelPoints = 200,
 					MaximumChannelPoints = 2000,
 					Scaling = 1.5
@@ -68,7 +66,6 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.AlucardWhatSound,
 					Cooldown = new System.TimeSpan(0, 30, 0),
 					StartsOnCooldown = true,
-					Bits = 20,
 					ChannelPoints = 200,
 					MaximumChannelPoints = 4000,
 					Scaling = 1.5
@@ -80,7 +77,6 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.AlucardWhatSound,
 					Cooldown = new System.TimeSpan(0, 35, 0),
 					StartsOnCooldown = true,
-					Bits = 50,
 					ChannelPoints = 500,
 					Scaling = 2.0
 				},
@@ -98,7 +94,6 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.LibrarianThankYouSound,
 					Cooldown = new System.TimeSpan(0, 5, 0),
 					StartsOnCooldown = true,
-					Bits = 10,
 					ChannelPoints = 100,
 					Scaling = 2.0
 				},
@@ -109,19 +104,8 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.AlucardWhatSound,
 					Cooldown = new System.TimeSpan(0, 35, 0),
 					StartsOnCooldown = true,
-					Bits = 20,
 					ChannelPoints = 200,
 					MaximumChannelPoints = 2000,
-					Scaling = 1.5
-				},
-				new Action{
-					Name = "Khaotic Burst",
-					Description = "Increases the Khaos Meter by 100 points, guaranteeing an enhanced action soon.",
-					Meter = 10,
-					AlertPath = Paths.AlucardWhatSound,
-					Cooldown = new System.TimeSpan(0, 10, 0),
-					Bits = 20,
-					ChannelPoints = 200,
 					Scaling = 1.5
 				},
 				new Action{
@@ -132,7 +116,6 @@ namespace SotnKhaosTools.Configuration
 					Cooldown = new System.TimeSpan(0, 5, 0),
 					Duration = new System.TimeSpan(0, 3, 0),
 					RequiresUserInput = true,
-					Bits = 15,
 					ChannelPoints = 200,
 					Scaling = 1
 				},
@@ -143,7 +126,6 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.DeathLaughSound,
 					Cooldown = new System.TimeSpan(0, 35, 0),
 					StartsOnCooldown = true,
-					Bits = 50,
 					ChannelPoints = 500,
 					Scaling = 2.0
 				},
@@ -154,7 +136,6 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.DieSound,
 					Cooldown = new System.TimeSpan(0, 35, 0),
 					StartsOnCooldown = true,
-					Bits = 50,
 					ChannelPoints = 500,
 					Scaling = 2.0
 				},
@@ -165,21 +146,8 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.HohoSound,
 					Cooldown = new System.TimeSpan(0, 10, 0),
 					StartsOnCooldown = true,
-					Bits = 20,
 					ChannelPoints = 200,
 					MaximumChannelPoints = 2000,
-					Scaling = 1.5
-				},
-				new Action{
-					Name = "Subweapons Only",
-					Description = "Alucard can only use subweapons for combat for a period. Alucard is cursed and mana is locked to 5. Gives Cube of Zoe, a subweapon and 200 hearts. Takes away Gas Cloud temporarily.",
-					Meter = 4,
-					AlertPath = Paths.RichterLaughSound,
-					Cooldown = new System.TimeSpan(0, 10, 0),
-					Duration = new System.TimeSpan(0, 1, 0),
-					Bits = 30,
-					ChannelPoints = 300,
-					MaximumChannelPoints = 3000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -190,7 +158,6 @@ namespace SotnKhaosTools.Configuration
 					Duration = new System.TimeSpan(0, 0, 40),
 					Cooldown = new System.TimeSpan(0, 6, 0),
 					StartsOnCooldown = true,
-					Bits = 30,
 					ChannelPoints = 300,
 					MaximumChannelPoints = 3000,
 					Scaling = 1.5
@@ -202,7 +169,6 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.DeathLaughSound,
 					Duration = new System.TimeSpan(0, 1, 0),
 					Cooldown = new System.TimeSpan(0, 6, 0),
-					Bits = 20,
 					ChannelPoints = 200,
 					MaximumChannelPoints = 2000,
 					Scaling = 1.5
@@ -215,7 +181,6 @@ namespace SotnKhaosTools.Configuration
 					Duration = new System.TimeSpan(0, 2, 0),
 					Cooldown = new System.TimeSpan(0, 5, 0),
 					StartsOnCooldown = true,
-					Bits = 20,
 					ChannelPoints = 200,
 					MaximumChannelPoints = 2000,
 					Scaling = 1.5
@@ -224,11 +189,10 @@ namespace SotnKhaosTools.Configuration
 					Name = "Khaos Horde",
 					Description = "Khaos has awakened! The castle begins to continuously spawn enemies. Triggers after a viable enemy is encountered in the area.",
 					Meter = 8,
-					AlertPath = Paths.DracLaughSound,
+					AlertPath = Paths.Horde,
 					Duration = new System.TimeSpan(0, 1, 30),
 					Interval = new System.TimeSpan(0, 0, 1),
 					Cooldown = new System.TimeSpan(0, 8, 0),
-					Bits = 40,
 					ChannelPoints = 300,
 					MaximumChannelPoints = 4000,
 					Scaling = 1.5
@@ -239,7 +203,6 @@ namespace SotnKhaosTools.Configuration
 					Meter = 7,
 					AlertPath = Paths.DeathLaughAlternateSound,
 					Cooldown = new System.TimeSpan(0, 3, 0),
-					Bits = 30,
 					ChannelPoints = 300,
 					MaximumChannelPoints = 4000,
 					Scaling = 1.5
@@ -252,7 +215,18 @@ namespace SotnKhaosTools.Configuration
 					Duration = new System.TimeSpan(0, 1, 30),
 					Cooldown = new System.TimeSpan(0, 8, 0),
 					StartsOnCooldown = true,
-					Bits = 40,
+					ChannelPoints = 400,
+					MaximumChannelPoints = 4000,
+					Scaling = 1.5
+				},
+				new Action{
+					Name = "BulletHell",
+					Description = "Dodge for your life!",
+					Meter = 7,
+					AlertPath = Paths.LarisaLaugh,
+					Duration = new System.TimeSpan(0, 1, 30),
+					Cooldown = new System.TimeSpan(0, 7, 0),
+					StartsOnCooldown = true,
 					ChannelPoints = 400,
 					MaximumChannelPoints = 4000,
 					Scaling = 1.5
@@ -264,18 +238,16 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.QuadSound,
 					Duration = new System.TimeSpan(0, 0, 35),
 					Cooldown = new System.TimeSpan(0, 15, 0),
-					Bits = 30,
 					ChannelPoints = 400,
 					MaximumChannelPoints = 4000,
 					Scaling = 1.5
 				},
 				new Action{
 					Name = "Light Help",
-					Description = "Activates a Potion, Shield Potion or gives Alucard a minor item.",
+					Description = "Alucard cracks a cold one and activates a Potion, Shield Potion or gives Alucard a minor item.",
 					Meter = 2,
-					AlertPath = Paths.FairyPotionSound,
+					AlertPath = Paths.Cristal,
 					Cooldown = new System.TimeSpan(0, 0, 0),
-					Bits = 10,
 					ChannelPoints = 100,
 					MaximumChannelPoints = 1000,
 					Scaling = 1.5
@@ -284,9 +256,8 @@ namespace SotnKhaosTools.Configuration
 					Name = "Medium Help",
 					Description = "Activates an Elixir, Manna Prism or gives Alucard a decent item.",
 					Meter = 5,
-					AlertPath = Paths.FairyPotionSound,
-					Cooldown = new System.TimeSpan(0, 3, 0),
-					Bits = 20,
+					AlertPath = Paths.PotionDrink,
+					Cooldown = new System.TimeSpan(0, 2, 0),
 					ChannelPoints = 200,
 					MaximumChannelPoints = 2000,
 					Scaling = 1.5
@@ -298,7 +269,6 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.FairyPotionSound,
 					StartsOnCooldown = true,
 					Cooldown = new System.TimeSpan(0, 7, 0),
-					Bits = 30,
 					ChannelPoints = 300,
 					MaximumChannelPoints = 4000,
 					Scaling = 2.0
@@ -310,49 +280,47 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.BattleOrdersSound,
 					Duration = new System.TimeSpan(0, 1, 0),
 					Cooldown = new System.TimeSpan(0, 8, 0),
-					Bits = 20,
 					ChannelPoints = 200,
 					MaximumChannelPoints = 2000,
 					Scaling = 1.5
 				},
 				new Action{
 					Name = "Magician",
-					Description = "Mana is locked to max for a period. Activates an Int Potion.",
+					Description = "Unlimited mana for a period and buffed spells.",
 					Meter = 6,
+					AlertPath = Paths.Thunderstorm,
 					Duration = new System.TimeSpan(0, 1, 0),
 					Cooldown = new System.TimeSpan(0, 8, 0),
-					Bits = 30,
 					ChannelPoints = 300,
 					MaximumChannelPoints = 3000,
 					Scaling = 1.5
 				},
 				new Action{
-					Name = "Melty Blood",
-					Description = "The hitboxes of most of Alucard's non-special attacks become S+ tier for a period.",
+					Name = "S tier",
+					Description = "The hitboxes of most of Alucard's non-special attacks become S tier for a period.",
 					Meter = 5,
-					AlertPath = Paths.MeltySound,
+					AlertPath = Paths.Messatsu,
 					Duration = new System.TimeSpan(0, 1, 0),
 					Cooldown = new System.TimeSpan(0, 8, 0),
-					Bits = 30,
 					ChannelPoints = 300,
 					MaximumChannelPoints = 3000,
 					Scaling = 1.5
 				},
 				new Action{
-					Name = "Guilty Gear",
+					Name = "Overpowered",
 					Description = "In addition to the standard effect the player gets some iframes, boosted attack, boosted speed and a very fast wingsmash.",
 					IsUsable = false,
 					Meter = 5,
-					AlertPath = Paths.DragonInstallSound,
+					AlertPath = Paths.GeneiJin,
 					Duration = new System.TimeSpan(0, 1, 0),
 				},
 				new Action{
 					Name = "Four Beasts",
-					Description = "For a period Alucard becomes fully invincible, damages enemies when they touch him and has an attack buff.",
+					Description = "Greatly buffs spells. After all four have been buffed Alucard becomes invincible for a period.",
 					Meter = 10,
-					Duration = new System.TimeSpan(0, 1, 30),
+					AlertPath = Paths.MariaHelp,
+					Duration = new System.TimeSpan(0, 1, 0),
 					Cooldown = new System.TimeSpan(0, 6, 0),
-					Bits = 20,
 					ChannelPoints = 200,
 					MaximumChannelPoints = 3000,
 					Scaling = 1.5
@@ -364,34 +332,20 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.ZaWarudoSound,
 					Duration = new System.TimeSpan(0, 0, 30),
 					Cooldown = new System.TimeSpan(0, 6, 0),
-					Bits = 20,
 					ChannelPoints = 200,
 					MaximumChannelPoints = 2000,
 					Scaling = 1.0
 				},
 				new Action{
 					Name = "Haste",
-					Description = "Increase movement speed for a period. Player can dash by double tapping forward like Richter.",
+					Description = "Increase movement and attack speed for a period.",
 					Meter = 6,
-					Duration = new System.TimeSpan(0, 0, 30),
+					AlertPath = Paths.Speed,
+					Duration = new System.TimeSpan(0, 0, 40),
 					Cooldown = new System.TimeSpan(0, 5, 0),
-					Bits = 30,
 					ChannelPoints = 300,
 					MaximumChannelPoints = 3000,
 					Scaling = 1.5
-				},
-				new Action{
-					Description = "Alucard is also a Lord in the castle. Similar to Horde, but the spawned monsters are the player's allies!",
-					Name = "Lord",
-					Meter = 8,
-					AlertPath = Paths.SwordBroSound,
-					Duration = new System.TimeSpan(0, 1, 30),
-					Interval = new System.TimeSpan(0, 0, 1),
-					Cooldown = new System.TimeSpan(0, 8, 0),
-					Bits = 30,
-					ChannelPoints = 300,
-					MaximumChannelPoints = 3000,
-					Scaling = 2.0
 				}
 			};
 		}
@@ -400,7 +354,7 @@ namespace SotnKhaosTools.Configuration
 		{
 			Alerts = true;
 			ControlPannelQueueActions = true;
-			Volume = 3;
+			Volume = 4;
 			WeakenFactor = 0.7F;
 			HasteFactor = 3.2F;
 			ThirstDrainPerSecond = 1;
@@ -408,10 +362,11 @@ namespace SotnKhaosTools.Configuration
 			PandoraMinItems = 15;
 			PandoraMaxItems = 35;
 			MeterOnReset = 50;
-			QueueInterval = new System.TimeSpan(0, 0, 21);
+			MinimumBits = 100;
+			BitsChoice = 300;
+			QueueInterval = new System.TimeSpan(0, 0, 15);
 			DynamicInterval = true;
 			KeepVladRelics = false;
-			RomhackMode = false;
 			CostDecay = true;
 			LightHelpItemRewards = new string[]
 			{

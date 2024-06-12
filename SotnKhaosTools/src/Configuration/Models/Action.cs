@@ -25,7 +25,6 @@ namespace SotnKhaosTools.Configuration.Models
 		public TimeSpan Interval { get; set; }
 		public TimeSpan Cooldown { get; set; }
 		public DateTime? LastUsedAt { get; set; }
-		public uint Bits { get; set; }
 		public uint ChannelPoints { get; set; }
 		public uint MaximumChannelPoints { get; set; }
 		public uint CurrentBits { get; set; }

@@ -44,16 +44,13 @@ namespace SotnKhaosTools
 		{
 			alertsCheckbox.Checked = toolConfig.Khaos.Alerts;
 			volumeTrackBar.Value = toolConfig.Khaos.Volume;
-			pandoraThresholdTextBox.Text = toolConfig.Khaos.PandoraTrigger.ToString();
-			hasteTextBox.Text = (toolConfig.Khaos.HasteFactor * 100) + "%";
-			weakenTextBox.Text = (toolConfig.Khaos.WeakenFactor * 100) + "%";
 			queueTextBox.Text = toolConfig.Khaos.QueueInterval.ToString();
 			dynamicIntervalCheckBox.Checked = toolConfig.Khaos.DynamicInterval;
 			keepVladRelicsCheckbox.Checked = toolConfig.Khaos.KeepVladRelics;
 			costDecayCheckBox.Checked = toolConfig.Khaos.CostDecay;
-			pandoraMinTextBox.Text = toolConfig.Khaos.PandoraMinItems.ToString();
-			pandoraMaxTextBox.Text = toolConfig.Khaos.PandoraMaxItems.ToString();
 			autoDifficultyComboBox.Text = toolConfig.Khaos.AutoKhaosDifficulty;
+			minimumBitsTextBox.Text = toolConfig.Khaos.MinimumBits.ToString();
+			choiceBitsTextBox.Text = toolConfig.Khaos.BitsChoice.ToString();
 		}
 
 		private void ActionPricingGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -147,141 +144,6 @@ namespace SotnKhaosTools
 			toolConfig.Khaos.Alerts = alertsCheckbox.Checked;
 		}
 
-		private void pandoraThresholdTextBox_Validated(object sender, EventArgs e)
-		{
-			toolConfig.Khaos.PandoraTrigger = Convert.ToInt32(pandoraThresholdTextBox.Text);
-			pandoraThresholdTextBox.BackColor = Color.White;
-			this.valueToolTip.Active = false;
-		}
-
-		private void pandoraThresholdTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			//if (this.ActiveControl.Equals(sender))
-			//return;
-			int points = Convert.ToInt32(pandoraThresholdTextBox.Text);
-			if (points < 0 || points > 3000)
-			{
-				this.pandoraThresholdTextBox.Text = "";
-				this.pandoraThresholdTextBox.BackColor = Color.Red;
-				this.valueToolTip.SetToolTip(pandoraThresholdTextBox, "Invalid value!");
-				this.valueToolTip.ToolTipIcon = ToolTipIcon.Warning;
-				this.valueToolTip.Active = true;
-				e.Cancel = true;
-			}
-		}
-
-		private void hasteTextBox_Validated(object sender, EventArgs e)
-		{
-			string boxText = hasteTextBox.Text.Replace("%", "");
-			int hastePercentage;
-			bool result = Int32.TryParse(boxText, out hastePercentage);
-			if (result)
-			{
-				toolConfig.Khaos.HasteFactor = (hastePercentage / 100F);
-			}
-			hasteTextBox.BackColor = Color.White;
-			this.valueToolTip.Active = false;
-		}
-
-		private void hasteTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			string boxText = hasteTextBox.Text.Replace("%", "");
-			int hastePercentage;
-			bool result = Int32.TryParse(boxText, out hastePercentage);
-			if (!result || hastePercentage < 100 || hastePercentage > 1000)
-			{
-				this.hasteTextBox.Text = "";
-				this.hasteTextBox.BackColor = Color.Red;
-				this.valueToolTip.SetToolTip(hasteTextBox, "Invalid value!");
-				this.valueToolTip.ToolTipIcon = ToolTipIcon.Warning;
-				this.valueToolTip.Active = true;
-				e.Cancel = true;
-			}
-		}
-
-		private void weakenTextBox_Validated(object sender, EventArgs e)
-		{
-			string boxText = weakenTextBox.Text.Replace("%", "");
-			int weakenPercentage;
-			bool result = Int32.TryParse(boxText, out weakenPercentage);
-			if (result)
-			{
-				toolConfig.Khaos.WeakenFactor = (weakenPercentage / 100F);
-			}
-			weakenTextBox.BackColor = Color.White;
-			this.valueToolTip.Active = false;
-		}
-
-		private void weakenTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			string boxText = weakenTextBox.Text.Replace("%", "");
-			int weakenPercentage;
-			bool result = Int32.TryParse(boxText, out weakenPercentage);
-			if (!result || weakenPercentage < 10 || weakenPercentage > 90)
-			{
-				this.weakenTextBox.Text = "";
-				this.weakenTextBox.BackColor = Color.Red;
-				this.valueToolTip.SetToolTip(weakenTextBox, "Invalid value!");
-				this.valueToolTip.ToolTipIcon = ToolTipIcon.Warning;
-				this.valueToolTip.Active = true;
-				e.Cancel = true;
-			}
-		}
-
-		private void pandoraMinTextBox_Validated(object sender, EventArgs e)
-		{
-			int pandoraMinItems;
-			bool result = Int32.TryParse(pandoraMinTextBox.Text, out pandoraMinItems);
-			if (result)
-			{
-				toolConfig.Khaos.PandoraMinItems = pandoraMinItems;
-			}
-			pandoraMinTextBox.BackColor = Color.White;
-			this.valueToolTip.Active = false;
-		}
-
-		private void pandoraMinTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			int pandoraMinItems;
-			bool result = Int32.TryParse(pandoraMinTextBox.Text, out pandoraMinItems);
-			if (!result || pandoraMinItems < 0 || pandoraMinItems > 100)
-			{
-				this.pandoraMinTextBox.Text = "";
-				this.pandoraMinTextBox.BackColor = Color.Red;
-				this.valueToolTip.SetToolTip(pandoraMinTextBox, "Invalid value!");
-				this.valueToolTip.ToolTipIcon = ToolTipIcon.Warning;
-				this.valueToolTip.Active = true;
-				e.Cancel = true;
-			}
-		}
-
-		private void pandoraMaxTextBox_Validated(object sender, EventArgs e)
-		{
-			int pandoraMaxItems;
-			bool result = Int32.TryParse(pandoraMaxTextBox.Text, out pandoraMaxItems);
-			if (result)
-			{
-				toolConfig.Khaos.PandoraMaxItems = pandoraMaxItems;
-			}
-			pandoraMaxTextBox.BackColor = Color.White;
-			this.valueToolTip.Active = false;
-		}
-
-		private void pandoraMaxTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			int pandoraMaxItems;
-			bool result = Int32.TryParse(pandoraMaxTextBox.Text, out pandoraMaxItems);
-			if (!result || pandoraMaxItems < 1 || pandoraMaxItems > 100)
-			{
-				this.pandoraMaxTextBox.Text = "";
-				this.pandoraMaxTextBox.BackColor = Color.Red;
-				this.valueToolTip.SetToolTip(pandoraMaxTextBox, "Invalid value!");
-				this.valueToolTip.ToolTipIcon = ToolTipIcon.Warning;
-				this.valueToolTip.Active = true;
-				e.Cancel = true;
-			}
-		}
-
 		private void queueTextBox_Validated(object sender, EventArgs e)
 		{
 			TimeSpan queueInterval;
@@ -350,6 +212,16 @@ namespace SotnKhaosTools
 		{
 			toolConfig.Khaos.IncreaseAllChannelPointPrices();
 			actionPricingGridView.Refresh();
+		}
+
+		private void minimumBitsTextBox_TextChanged(object sender, EventArgs e)
+		{
+			toolConfig.Khaos.MinimumBits = Int32.Parse(minimumBitsTextBox.Text);
+		}
+
+		private void choiceBitsTextBox_TextChanged(object sender, EventArgs e)
+		{
+			toolConfig.Khaos.BitsChoice = Int32.Parse(choiceBitsTextBox.Text);
 		}
 	}
 }

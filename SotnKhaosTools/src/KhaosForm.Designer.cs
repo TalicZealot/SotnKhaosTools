@@ -37,7 +37,6 @@ namespace SotnKhaosTools
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KhaosForm));
             this.enduranceButton = new System.Windows.Forms.Button();
             this.hasteButton = new System.Windows.Forms.Button();
-            this.subsonlyButton = new System.Windows.Forms.Button();
             this.hordeButton = new System.Windows.Forms.Button();
             this.zawarudoButton = new System.Windows.Forms.Button();
             this.modePanel = new System.Windows.Forms.GroupBox();
@@ -95,10 +94,9 @@ namespace SotnKhaosTools
             this.timersBox = new System.Windows.Forms.GroupBox();
             this.timersTextBox = new System.Windows.Forms.TextBox();
             this.controlPanel = new System.Windows.Forms.TabPage();
+            this.banishButton = new System.Windows.Forms.Button();
             this.khaosTrackButton = new System.Windows.Forms.Button();
-            this.lordButton = new System.Windows.Forms.Button();
             this.hnkButton = new System.Windows.Forms.Button();
-            this.burstButton = new System.Windows.Forms.Button();
             this.redemptions = new System.Windows.Forms.TabPage();
             this.redemptionsGridView = new System.Windows.Forms.DataGridView();
             this.ActionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -106,7 +104,7 @@ namespace SotnKhaosTools
             this.Refund = new System.Windows.Forms.DataGridViewButtonColumn();
             this.autoKhaosButton = new System.Windows.Forms.Button();
             this.connectButton = new System.Windows.Forms.Button();
-            this.banishButton = new System.Windows.Forms.Button();
+            this.bulletHellButton = new System.Windows.Forms.Button();
             this.modePanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.statusPanel.SuspendLayout();
@@ -127,7 +125,7 @@ namespace SotnKhaosTools
             this.enduranceButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.enduranceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.enduranceButton.ForeColor = System.Drawing.Color.White;
-            this.enduranceButton.Location = new System.Drawing.Point(146, 339);
+            this.enduranceButton.Location = new System.Drawing.Point(146, 307);
             this.enduranceButton.Name = "enduranceButton";
             this.enduranceButton.Size = new System.Drawing.Size(134, 26);
             this.enduranceButton.TabIndex = 26;
@@ -151,22 +149,6 @@ namespace SotnKhaosTools
             this.hasteButton.UseVisualStyleBackColor = true;
             this.hasteButton.Click += new System.EventHandler(this.hasteButton_Click);
             // 
-            // subsonlyButton
-            // 
-            this.subsonlyButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.subsonlyButton.FlatAppearance.BorderSize = 2;
-            this.subsonlyButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.subsonlyButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.subsonlyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.subsonlyButton.ForeColor = System.Drawing.Color.White;
-            this.subsonlyButton.Location = new System.Drawing.Point(146, 179);
-            this.subsonlyButton.Name = "subsonlyButton";
-            this.subsonlyButton.Size = new System.Drawing.Size(134, 26);
-            this.subsonlyButton.TabIndex = 24;
-            this.subsonlyButton.Text = "SubweaponsOnly";
-            this.subsonlyButton.UseVisualStyleBackColor = true;
-            this.subsonlyButton.Click += new System.EventHandler(this.subsonlyButton_Click);
-            // 
             // hordeButton
             // 
             this.hordeButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
@@ -175,7 +157,7 @@ namespace SotnKhaosTools
             this.hordeButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.hordeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.hordeButton.ForeColor = System.Drawing.Color.White;
-            this.hordeButton.Location = new System.Drawing.Point(146, 307);
+            this.hordeButton.Location = new System.Drawing.Point(146, 275);
             this.hordeButton.Name = "hordeButton";
             this.hordeButton.Size = new System.Drawing.Size(134, 26);
             this.hordeButton.TabIndex = 23;
@@ -242,7 +224,7 @@ namespace SotnKhaosTools
             this.thurstButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.thurstButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.thurstButton.ForeColor = System.Drawing.Color.White;
-            this.thurstButton.Location = new System.Drawing.Point(146, 275);
+            this.thurstButton.Location = new System.Drawing.Point(146, 243);
             this.thurstButton.Name = "thurstButton";
             this.thurstButton.Size = new System.Drawing.Size(134, 26);
             this.thurstButton.TabIndex = 20;
@@ -274,7 +256,7 @@ namespace SotnKhaosTools
             this.bloodManaButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.bloodManaButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bloodManaButton.ForeColor = System.Drawing.Color.White;
-            this.bloodManaButton.Location = new System.Drawing.Point(146, 243);
+            this.bloodManaButton.Location = new System.Drawing.Point(146, 211);
             this.bloodManaButton.Name = "bloodManaButton";
             this.bloodManaButton.Size = new System.Drawing.Size(134, 26);
             this.bloodManaButton.TabIndex = 18;
@@ -290,7 +272,7 @@ namespace SotnKhaosTools
             this.crippleButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.crippleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.crippleButton.ForeColor = System.Drawing.Color.White;
-            this.crippleButton.Location = new System.Drawing.Point(146, 211);
+            this.crippleButton.Location = new System.Drawing.Point(146, 179);
             this.crippleButton.Name = "crippleButton";
             this.crippleButton.Size = new System.Drawing.Size(134, 26);
             this.crippleButton.TabIndex = 17;
@@ -895,15 +877,13 @@ namespace SotnKhaosTools
             // controlPanel
             // 
             this.controlPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.controlPanel.Controls.Add(this.bulletHellButton);
             this.controlPanel.Controls.Add(this.banishButton);
             this.controlPanel.Controls.Add(this.khaosTrackButton);
-            this.controlPanel.Controls.Add(this.lordButton);
             this.controlPanel.Controls.Add(this.hnkButton);
-            this.controlPanel.Controls.Add(this.burstButton);
             this.controlPanel.Controls.Add(this.enduranceButton);
             this.controlPanel.Controls.Add(this.hasteButton);
             this.controlPanel.Controls.Add(this.modePanel);
-            this.controlPanel.Controls.Add(this.subsonlyButton);
             this.controlPanel.Controls.Add(this.randomStatusButton);
             this.controlPanel.Controls.Add(this.hordeButton);
             this.controlPanel.Controls.Add(this.randomEquipmentButton);
@@ -933,6 +913,22 @@ namespace SotnKhaosTools
             this.controlPanel.TabIndex = 0;
             this.controlPanel.Text = "Control Panel";
             // 
+            // banishButton
+            // 
+            this.banishButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.banishButton.FlatAppearance.BorderSize = 2;
+            this.banishButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.banishButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.banishButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.banishButton.ForeColor = System.Drawing.Color.White;
+            this.banishButton.Location = new System.Drawing.Point(6, 275);
+            this.banishButton.Name = "banishButton";
+            this.banishButton.Size = new System.Drawing.Size(134, 26);
+            this.banishButton.TabIndex = 31;
+            this.banishButton.Text = "Banish";
+            this.banishButton.UseVisualStyleBackColor = true;
+            this.banishButton.Click += new System.EventHandler(this.banishButton_Click);
+            // 
             // khaosTrackButton
             // 
             this.khaosTrackButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
@@ -941,29 +937,13 @@ namespace SotnKhaosTools
             this.khaosTrackButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.khaosTrackButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.khaosTrackButton.ForeColor = System.Drawing.Color.White;
-            this.khaosTrackButton.Location = new System.Drawing.Point(9, 339);
+            this.khaosTrackButton.Location = new System.Drawing.Point(9, 307);
             this.khaosTrackButton.Name = "khaosTrackButton";
             this.khaosTrackButton.Size = new System.Drawing.Size(134, 26);
             this.khaosTrackButton.TabIndex = 30;
             this.khaosTrackButton.Text = "Khaos Track";
             this.khaosTrackButton.UseVisualStyleBackColor = true;
             this.khaosTrackButton.Click += new System.EventHandler(this.khaosTrackButton_Click);
-            // 
-            // lordButton
-            // 
-            this.lordButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.lordButton.FlatAppearance.BorderSize = 2;
-            this.lordButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.lordButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.lordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.lordButton.ForeColor = System.Drawing.Color.White;
-            this.lordButton.Location = new System.Drawing.Point(286, 403);
-            this.lordButton.Name = "lordButton";
-            this.lordButton.Size = new System.Drawing.Size(134, 26);
-            this.lordButton.TabIndex = 29;
-            this.lordButton.Text = "Lord";
-            this.lordButton.UseVisualStyleBackColor = true;
-            this.lordButton.Click += new System.EventHandler(this.lordButton_Click);
             // 
             // hnkButton
             // 
@@ -973,29 +953,13 @@ namespace SotnKhaosTools
             this.hnkButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.hnkButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.hnkButton.ForeColor = System.Drawing.Color.White;
-            this.hnkButton.Location = new System.Drawing.Point(146, 371);
+            this.hnkButton.Location = new System.Drawing.Point(146, 339);
             this.hnkButton.Name = "hnkButton";
             this.hnkButton.Size = new System.Drawing.Size(134, 26);
             this.hnkButton.TabIndex = 28;
             this.hnkButton.Text = "HnK";
             this.hnkButton.UseVisualStyleBackColor = true;
             this.hnkButton.Click += new System.EventHandler(this.hnkButton_Click);
-            // 
-            // burstButton
-            // 
-            this.burstButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.burstButton.FlatAppearance.BorderSize = 2;
-            this.burstButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.burstButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.burstButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.burstButton.ForeColor = System.Drawing.Color.White;
-            this.burstButton.Location = new System.Drawing.Point(6, 307);
-            this.burstButton.Name = "burstButton";
-            this.burstButton.Size = new System.Drawing.Size(134, 26);
-            this.burstButton.TabIndex = 27;
-            this.burstButton.Text = "Khaotic Burst";
-            this.burstButton.UseVisualStyleBackColor = true;
-            this.burstButton.Click += new System.EventHandler(this.burstButton_Click);
             // 
             // redemptions
             // 
@@ -1123,21 +1087,21 @@ namespace SotnKhaosTools
             this.connectButton.UseVisualStyleBackColor = false;
             this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
             // 
-            // banishButton
+            // bulletHellButton
             // 
-            this.banishButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.banishButton.FlatAppearance.BorderSize = 2;
-            this.banishButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.banishButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.banishButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.banishButton.ForeColor = System.Drawing.Color.White;
-            this.banishButton.Location = new System.Drawing.Point(6, 275);
-            this.banishButton.Name = "banishButton";
-            this.banishButton.Size = new System.Drawing.Size(134, 26);
-            this.banishButton.TabIndex = 31;
-            this.banishButton.Text = "Banish";
-            this.banishButton.UseVisualStyleBackColor = true;
-            this.banishButton.Click += new System.EventHandler(this.banishButton_Click);
+            this.bulletHellButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.bulletHellButton.FlatAppearance.BorderSize = 2;
+            this.bulletHellButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.bulletHellButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.bulletHellButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bulletHellButton.ForeColor = System.Drawing.Color.White;
+            this.bulletHellButton.Location = new System.Drawing.Point(146, 371);
+            this.bulletHellButton.Name = "bulletHellButton";
+            this.bulletHellButton.Size = new System.Drawing.Size(134, 26);
+            this.bulletHellButton.TabIndex = 32;
+            this.bulletHellButton.Text = "Bullet Hell";
+            this.bulletHellButton.UseVisualStyleBackColor = true;
+            this.bulletHellButton.Click += new System.EventHandler(this.bulletHellButton_Click);
             // 
             // KhaosForm
             // 
@@ -1206,7 +1170,6 @@ namespace SotnKhaosTools
 		private System.Windows.Forms.RadioButton queueRadio;
 		private System.Windows.Forms.Button zawarudoButton;
 		private System.Windows.Forms.Button hordeButton;
-		private System.Windows.Forms.Button subsonlyButton;
 		private System.Windows.Forms.Button hasteButton;
 		private System.Windows.Forms.Button enduranceButton;
 		private System.Windows.Forms.TabControl tabControl1;
@@ -1228,9 +1191,7 @@ namespace SotnKhaosTools
 		private System.Windows.Forms.Label ringLocation;
 		private System.Windows.Forms.Label ribLocation;
 		private System.Windows.Forms.Label toothLocation;
-		private System.Windows.Forms.Button burstButton;
 		private System.Windows.Forms.Button hnkButton;
-		private System.Windows.Forms.Button lordButton;
 		private System.Windows.Forms.Button connectButton;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Label leapLocationLabel;
@@ -1252,6 +1213,7 @@ namespace SotnKhaosTools
 		private System.Windows.Forms.DataGridViewTextBoxColumn Username;
 		private System.Windows.Forms.DataGridViewButtonColumn Refund;
         private System.Windows.Forms.Button banishButton;
-    }
+		private System.Windows.Forms.Button bulletHellButton;
+	}
 }
 

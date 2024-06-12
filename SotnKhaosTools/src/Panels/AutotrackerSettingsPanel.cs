@@ -41,16 +41,11 @@ namespace SotnKhaosTools
 
 			alwaysOnTopCheckBox.Checked = toolConfig.Tracker.AlwaysOnTop;
 			locationsCheckbox.Checked = toolConfig.Tracker.Locations;
-			replaysCheckBox.Checked = toolConfig.Tracker.SaveReplays;
-			overlayCheckBox.Checked = toolConfig.Tracker.UseOverlay;
-			autosplitterCheckBox.Checked = toolConfig.Tracker.EnableAutosplitter;
 
 			customLocationsGuardedRadio.Checked = toolConfig.Tracker.CustomLocationsGuarded;
 			customLocationsEquipmentRadio.Checked = toolConfig.Tracker.CustomLocationsEquipment;
 			customLocationsClassicRadio.Checked = toolConfig.Tracker.CustomLocationsClassic;
 			customLocationsSpreadRadio.Checked = toolConfig.Tracker.CustomLocationsSpread;
-
-			username.Text = toolConfig.Tracker.Username;
 		}
 
 		private void radioProgression_CheckedChanged(object sender, EventArgs e)
@@ -97,11 +92,6 @@ namespace SotnKhaosTools
 			toolConfig.Tracker.Default();
 		}
 
-		private void replaysCheckBox_CheckedChanged(object sender, EventArgs e)
-		{
-			toolConfig.Tracker.SaveReplays = replaysCheckBox.Checked;
-		}
-
 		private void customLocationsGuardedRadio_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Tracker.CustomLocationsGuarded = customLocationsGuardedRadio.Checked;
@@ -120,21 +110,6 @@ namespace SotnKhaosTools
 		private void customLocationsSpreadRadio_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Tracker.CustomLocationsSpread = customLocationsSpreadRadio.Checked;
-		}
-
-		private void username_TextChanged(object sender, EventArgs e)
-		{
-			toolConfig.Tracker.Username = username.Text;
-		}
-
-		private void overlayCheckBox_CheckedChanged(object sender, EventArgs e)
-		{
-			toolConfig.Tracker.UseOverlay = overlayCheckBox.Checked;
-		}
-
-		private void autosplitterCheckBox_CheckedChanged(object sender, EventArgs e)
-		{
-			toolConfig.Tracker.EnableAutosplitter = autosplitterCheckBox.Checked;
 		}
 	}
 }

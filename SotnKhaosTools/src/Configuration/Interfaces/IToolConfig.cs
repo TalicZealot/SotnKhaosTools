@@ -6,7 +6,6 @@ namespace SotnKhaosTools.Configuration.Interfaces
 	{
 		TrackerConfig? Tracker { get; set; }
 		KhaosConfig? Khaos { get; set; }
-		CoopConfig? Coop { get; set; }
 		Point Location { get; set; }
 		string Version { get; set; }
 		void SaveConfig();

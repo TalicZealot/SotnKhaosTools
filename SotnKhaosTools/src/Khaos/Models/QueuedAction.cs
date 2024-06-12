@@ -12,6 +12,7 @@ namespace SotnKhaosTools.Khaos.Models
 			LocksSpawning = false;
 		}
 		public string Name { get; set; }
+		public int Index { get; set; }
 		public MethodInvoker Invoker { get; set; }
 		public bool LocksSpeed { get; set; }
 		public bool LocksMana { get; set; }

@@ -9,18 +9,17 @@
 		PandorasBox,
 		Gamble,
 		Banish,
-		KhaoticBurst,
 		KhaosTrack,
 		Bankrupt,
 		Weaken,
 		RespawnBosses,
-		SubweaponsOnly,
 		Slow,
 		BloodMana,
 		Thirst,
 		KhaosHorde,
 		Endurance,
 		HnK,
+		BulletHell,
 		Quad,
 		LightHelp,
 		MediumHelp,
@@ -31,7 +30,6 @@
 		GuiltyGear,
 		FourBeasts,
 		ZAWARUDO,
-		Haste,
-		Lord
+		Haste
 	}
 }

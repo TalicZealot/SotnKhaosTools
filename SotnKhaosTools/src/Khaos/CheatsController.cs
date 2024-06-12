@@ -1,7 +1,5 @@
 ﻿using System;
 using BizHawk.Client.Common;
-using SotnApi;
-using SotnApi.Constants.Values.Game;
 using SotnKhaosTools.Khaos.Interfaces;
 using SotnKhaosTools.Services.Adapters;
 
@@ -40,7 +38,6 @@ namespace SotnKhaosTools.Khaos
 		public Cheat AttackPotion { get; set; }
 		public Cheat StrengthPotion { get; set; }
 		public Cheat DefencePotion { get; set; }
-		public Cheat SubweaponTimer { get; set; }
 		public Cheat HitboxWidth { get; set; }
 		public Cheat HitboxHeight { get; set; }
 		public Cheat Hitbox2Width { get; set; }
@@ -65,7 +62,6 @@ namespace SotnKhaosTools.Khaos
 			AttackPotion = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.AttackPotion, 0x1, "AttackPotion", WatchSize.Byte);
 			StrengthPotion = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.StrengthPotion, 0x1, "StrengthPotion", WatchSize.Byte);
 			DefencePotion = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.DefencePotion, 0x1, "DefencePotion", WatchSize.Byte);
-			SubweaponTimer = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.SubweaponTimer, 0x1, "SubweaponTimer", WatchSize.Byte);
 			HitboxWidth = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Entity.AttackHitboxWidth_1, 0x40, "AlucardAttackHitboxWidth", WatchSize.Byte);
 			HitboxHeight = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Entity.AttackHitboxHeight_1, 0x40, "AlucardAttackHitboxHeight", WatchSize.Byte);
 			Hitbox2Width = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Entity.AttackHitboxWidth_2, 0x40, "AlucardAttackHitbox2Width", WatchSize.Byte);
@@ -76,7 +72,7 @@ namespace SotnKhaosTools.Khaos
 			VisualEffectTimer = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.VisualEffectTimer, 0x01, "VisualEffectTimer", WatchSize.Byte);
 			SavePalette = Cheats.AddCheat(SotnApi.Constants.Addresses.Game.SavePalette, Constants.Khaos.SaveIcosahedronFirstCastle, "SavePalette", WatchSize.Word);
 			ContactDamage = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Stats.ContactDamage, 0x0001, "ContactDamage", WatchSize.Word);
-			Music = Cheats.AddCheat(SotnApi.Constants.Addresses.Game.Music, 0x00, "Music", WatchSize.Byte);
+			Music = Cheats.AddCheat(SotnApi.Constants.Addresses.Game.LastLoadedMusicTrack, 0x00, "Music", WatchSize.Byte);
 			Activator = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Effects.Activator, 0x00, "Activator", WatchSize.Byte);
 
 			batCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.BatCardXp, 0x00002710, "BatCardXp", WatchSize.DWord);

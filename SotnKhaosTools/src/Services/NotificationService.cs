@@ -15,8 +15,8 @@ namespace SotnKhaosTools.Services
 	internal sealed class NotificationService : INotificationService
 	{
 		private OverlaySocketServer overlaySocketServer;
-		private const int NotificationTime = 5 * 1000;
-		private const int NotificationTimeFast = 3 * 1000;
+		private const int MessageDuration = 120;
+		private const int MessageDurationFast = 60;
 		private const int MapOffsetX = 16;
 		private const int MapOffsetY = 20;
 		private Color WallColor = Color.FromArgb(192, 192, 192);
@@ -25,8 +25,6 @@ namespace SotnKhaosTools.Services
 		private readonly IToolConfig toolConfig;
 		private readonly IEmuClientApi clientAPI;
 
-		private System.Timers.Timer messageTimer;
-		private System.Timers.Timer countdownTimer;
 		private int scale;
 		private Image textbox;
 		private Image vermillionBirdIcon;
@@ -37,11 +35,13 @@ namespace SotnKhaosTools.Services
 		private Dictionary<string, MapCoordinates> relicCoordinates = new();
 		private Dictionary<string, MapCoordinates> invertedRelicCoordinates = new();
 		private System.Windows.Media.MediaPlayer audioPlayer = new();
-		private List<string> messageQueue = new();
+		private Queue<string> messageQueue = new();
+		private int messageFrames = 0;
 		private bool fourBeastsIconsInitialized = false;
 		private bool relicImagesInitialized = false;
 		private bool mapOpen = false;
 		private bool invertedMapOpen = false;
+		private bool updated = false;
 
 		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, IEmuClientApi clientAPI)
 		{
@@ -51,16 +51,8 @@ namespace SotnKhaosTools.Services
 			this.guiApi = guiApi;
 			this.toolConfig = toolConfig;
 			this.clientAPI = clientAPI;
-
-			overlaySocketServer = new OverlaySocketServer(toolConfig);
-			messageTimer = new();
-			messageTimer.Interval = NotificationTime;
-			messageTimer.Elapsed += DequeueMessage;
-			messageTimer.Start();
-			countdownTimer = new();
-			countdownTimer.Interval = 1000;
-			countdownTimer.Elapsed += RefreshUI;
-			scale = GetScale();
+			overlaySocketServer = new OverlaySocketServer();
+			scale = clientAPI.GetWindowSize();
 			ResizeImages();
 			audioPlayer.Volume = (double) toolConfig.Khaos.Volume / 10F;
 			VermillionBirds = 0;
@@ -85,11 +77,8 @@ namespace SotnKhaosTools.Services
 			}
 			set
 			{
+				updated = true;
 				mapOpen = value;
-				if (!countdownTimer.Enabled)
-				{
-					countdownTimer.Start();
-				}
 			}
 		}
 
@@ -101,11 +90,8 @@ namespace SotnKhaosTools.Services
 			}
 			set
 			{
+				updated = true;
 				invertedMapOpen = value;
-				if (!countdownTimer.Enabled)
-				{
-					countdownTimer.Start();
-				}
 			}
 		}
 
@@ -141,23 +127,11 @@ namespace SotnKhaosTools.Services
 
 		public void AddMessage(string message)
 		{
-			messageQueue.Add(message);
+			updated = true;
+			messageQueue.Enqueue(message);
 			if (messageQueue.Count == 1)
 			{
-				messageTimer.Stop();
-				messageTimer.Start();
-			}
-			if (messageQueue.Count > 1)
-			{
-				messageTimer.Interval = NotificationTimeFast;
-			}
-			else
-			{
-				messageTimer.Interval = NotificationTime;
-			}
-			if (!countdownTimer.Enabled)
-			{
-				countdownTimer.Start();
+				messageFrames = MessageDuration;
 			}
 		}
 
@@ -171,9 +145,9 @@ namespace SotnKhaosTools.Services
 			overlaySocketServer.StopServer();
 		}
 
-		public void AddOverlayTimer(string name, int duration)
+		public void AddOverlayTimer(int index, int duration)
 		{
-			overlaySocketServer.AddTimer(name, duration);
+			overlaySocketServer.AddTimer(index, duration);
 		}
 
 		public void UpdateOverlayQueue(List<QueuedAction> actionQueue)
@@ -186,18 +160,13 @@ namespace SotnKhaosTools.Services
 			overlaySocketServer.UpdateMeter(meter);
 		}
 
-		public void UpdateTrackerOverlay(int relics, int items)
-		{
-			overlaySocketServer.UpdateTracker(relics, items);
-		}
-
 		public void SetRelicCoordinates(string relic, int mapCol, int mapRow)
 		{
 			if (relicCoordinates.ContainsKey(relic))
 			{
 				return;
 			}
-			relicCoordinates.Add(relic, new MapCoordinates { Xpos = (mapCol * 2) + MapOffsetX, Ypos = mapRow + MapOffsetY });
+			relicCoordinates.Add(relic, new MapCoordinates { Xpos = mapCol + MapOffsetX, Ypos = mapRow + MapOffsetY });
 		}
 
 		public void SetInvertedRelicCoordinates(string relic, int mapCol, int mapRow)
@@ -211,12 +180,11 @@ namespace SotnKhaosTools.Services
 
 		private void DrawUI()
 		{
-			int newScale = GetScale();
+			int newScale = clientAPI.GetWindowSize();
 			if (scale != newScale)
 			{
 				scale = newScale;
 				ResizeImages();
-				Console.WriteLine($"Changed scale to {scale}");
 			}
 
 			int fontSize = 11 * scale;
@@ -233,7 +201,7 @@ namespace SotnKhaosTools.Services
 				guiApi.ClearGraphics();
 				if (messageQueue.Count > 0)
 				{
-					DrawMessage(messageQueue[0], scale, (int) (screenWidth * 0.45), (int) (screenHeight * 0.1), fontSize);
+					DrawMessage(messageQueue.Peek(), scale, (int) (screenWidth * 0.45), (int) (screenHeight * 0.1), fontSize);
 				}
 				if (MapOpen)
 				{
@@ -248,26 +216,10 @@ namespace SotnKhaosTools.Services
 			});
 		}
 
-		private int GetScale()
-		{
-			int scale = clientAPI.GetWindowSize();
-			if (IsPixelPro())
-			{
-				scale *= 2;
-			}
-			return scale;
-		}
-
-		private bool IsPixelPro()
-		{
-			int bufferWidth = clientAPI.BufferWidth();
-			return bufferWidth == 800;
-		}
-
 		private void DrawMessage(string message, int scale, int xpos, int ypos, int fontSize)
 		{
 			int messageFontSize = fontSize;
-			while (TextRenderer.MeasureText(messageQueue[0], new Font("Arial", messageFontSize)).Width > (textbox.Width - (20 * scale)))
+			while (TextRenderer.MeasureText(message, new Font("Arial", messageFontSize)).Width > (textbox.Width - (20 * scale)))
 			{
 				messageFontSize -= 2;
 			}
@@ -333,27 +285,32 @@ namespace SotnKhaosTools.Services
 		{
 			int finalXpos = (int) Math.Round(xpos * scale * pixelScaleX);
 			int finalYpos = (int) Math.Round(ypos * scale * pixelScaleY);
-			int scaledPixelX = (int) Math.Round(1 * scale * pixelScaleX);
-			int scaledPixelY = (int) Math.Round(1 * scale * pixelScaleY);
-
-			guiApi.DrawBox(finalXpos - scaledPixelX, finalYpos - scaledPixelY, finalXpos + (4 * scaledPixelX), finalYpos + (4 * scaledPixelY), null, WallColor);
 			guiApi.DrawImage(relic, finalXpos, finalYpos, relic.Width, relic.Height, true);
 		}
 
-		private void DequeueMessage(Object sender, EventArgs e)
+		public void Refresh()
 		{
 			if (messageQueue.Count > 0)
 			{
-				messageQueue.RemoveAt(0);
+				if (messageFrames == 0)
+				{
+					messageQueue.Dequeue();
+					updated = true;
+					if (messageQueue.Count > 0)
+					{
+						messageFrames = MessageDuration;
+					}
+					if (messageQueue.Count > 2)
+					{
+						messageFrames = MessageDurationFast;
+					}
+				}
+				messageFrames--;
 			}
-		}
-
-		private void RefreshUI(Object sender, EventArgs e)
-		{
-			DrawUI();
-			if (messageQueue.Count == 0 && !MapOpen && !InvertedMapOpen)
+			if (updated)
 			{
-				countdownTimer.Stop();
+				DrawUI();
+				updated = false;
 			}
 		}
 

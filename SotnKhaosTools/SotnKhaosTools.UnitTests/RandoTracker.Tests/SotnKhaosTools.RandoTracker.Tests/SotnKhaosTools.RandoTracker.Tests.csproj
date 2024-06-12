@@ -33,7 +33,7 @@
       <HintPath>..\..\..\BizHawk\dll\BizHawk.Client.Common.dll</HintPath>
     </Reference>
     <Reference Include="SotnApi">
-      <HintPath>..\..\..\BizHawk\ExternalTools\SotnKhaosTools\SotnApi.dll</HintPath>
+      <HintPath>..\..\..\BizHawk\ExternalTools\SotnKhaosTools\dll\SotnApi.dll</HintPath>
     </Reference>
   </ItemGroup>
 

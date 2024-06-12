@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
+using SotnKhaosTools.Configuration;
 using SotnKhaosTools.Configuration.Interfaces;
-using SotnKhaosTools.Constants;
 using SotnKhaosTools.Khaos.Interfaces;
 using SotnKhaosTools.Khaos.Models;
 using SotnKhaosTools.Services;
-using SotnKhaosTools.Services.Interfaces;
+using SotnKhaosTools.Services.TwitchImplicitOAuth;
 using SotnKhaosTools.Utils;
 using TwitchLib.Api;
 using TwitchLib.Api.Core.Exceptions;
@@ -32,42 +30,34 @@ namespace SotnKhaosTools.Khaos
 		private const int MaxSubscribers = 100;
 		private const int FulfilRewardDelay = 60;
 		private const int FulfilTimerInterval = 3 * 30 * 1000;
-		private const int RefreshTokenInterval = 3 * (60 * (60 * 1000)) + (30 * (60 * 1000)); // 3.5 hours
 
 		private readonly IToolConfig toolConfig;
-		private readonly ITwitchListener twitchListener;
 		private readonly IActionDispatcher actionDispatcher;
 		private readonly INotificationService notificationService;
 		private readonly IEnemyRenamer enemyRenamer;
 
-		private System.Windows.Forms.Timer refreshTokenTimer = new();
-		private List<string> scopes = new List<string> { "channel:read:subscriptions", "channel:read:redemptions", "channel:manage:redemptions" };
 		private TwitchAPI api = new TwitchAPI();
 		private TwitchPubSub client = new TwitchPubSub();
 		private string broadcasterId;
-		private string refreshToken;
 		private List<string> customRewardIds = new();
 		private List<Timer> actionsStartingOnCooldown = new();
 		private BindingList<Redemption> redemptions = new();
 		private System.Windows.Forms.Timer redemptionFulfilTimer = new();
+		private string? currentState = null;
+		private readonly Random rng = new();
 
 		private bool manualDisconnect = false;
 
-		public ChannelPointsController(IToolConfig toolConfig, ITwitchListener twitchListener, IActionDispatcher actionDispatcher, INotificationService notificationService, IEnemyRenamer enemyRenamer)
+		public ChannelPointsController(IToolConfig toolConfig, IActionDispatcher actionDispatcher, INotificationService notificationService, IEnemyRenamer enemyRenamer)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
-			if (twitchListener is null) throw new ArgumentNullException(nameof(twitchListener));
 			if (actionDispatcher is null) throw new ArgumentNullException(nameof(actionDispatcher));
 			if (notificationService is null) throw new ArgumentNullException(nameof(notificationService));
 			if (enemyRenamer is null) throw new ArgumentNullException(nameof(enemyRenamer));
 			this.toolConfig = toolConfig;
-			this.twitchListener = twitchListener;
 			this.actionDispatcher = actionDispatcher;
 			this.notificationService = notificationService;
 			this.enemyRenamer = enemyRenamer;
-
-			refreshTokenTimer.Tick += RefreshToken;
-			refreshTokenTimer.Interval = RefreshTokenInterval;
 			redemptionFulfilTimer.Tick += FulfilOldRedemptions;
 			redemptionFulfilTimer.Interval = FulfilTimerInterval;
 			this.enemyRenamer = enemyRenamer;
@@ -81,43 +71,43 @@ namespace SotnKhaosTools.Khaos
 			}
 		}
 
-		public async Task<bool> Connect()
+		public void Connect()
 		{
-			Console.WriteLine($"Authenticating...");
-			validateCreds();
-			api.Settings.ClientId = TwitchConfiguration.TwitchClientId;
-			Process.Start(getAuthorizationCodeUrl(api.Settings.ClientId, Paths.TwitchRedirectUri, scopes));
-			Services.Models.Authorization? auth = await twitchListener.Listen();
-			if (auth.Code == String.Empty)
+			api.Settings.ClientId = ApplicationDetails.twitchClientId;
+			ImplicitOAuth ioa = new ImplicitOAuth();
+			ioa.OnRevcievedValues += RequestConnection;
+			currentState = ioa.RequestClientAuthorization();
+		}
+
+		private async void RequestConnection(string state, string token)
+		{
+			if (state != currentState)
 			{
-				return false;
+				return;
 			}
-			TwitchLib.Api.Auth.AuthCodeResponse? resp = await api.Auth.GetAccessTokenFromCodeAsync(auth.Code, TwitchConfiguration.TwitchClientSecret, Paths.TwitchRedirectUri);
-			api.Settings.AccessToken = resp.AccessToken;
-			refreshToken = resp.RefreshToken;
+
+			api.Settings.AccessToken = token;
 
 			var user = (await api.Helix.Users.GetUsersAsync()).Users[0];
 			broadcasterId = user.Id;
-			Console.WriteLine($"Authorization success!\r\nUser: {user.DisplayName}\r\nId: {user.Id} \r\nToken expires in : {resp.ExpiresIn}");
 
 			await GetSubscribers();
 			await CreateRewards();
 
 			client.OnPubSubServiceConnected += onPubSubServiceConnected;
 			client.OnListenResponse += onListenResponse;
+			client.OnChannelSubscription += Client_OnSubscription;
+			client.OnBitsReceivedV2 += Client_OnBitsReceivedV2;
 			client.OnChannelPointsRewardRedeemed += Client_OnChannelPointsRewardRedeemed;
 			client.OnPubSubServiceClosed += Client_OnPubSubServiceClosed;
 			client.ListenToChannelPoints(user.Id);
 			client.Connect();
 			notificationService.AddMessage("Connected to Twitch");
-			refreshTokenTimer.Start();
 			redemptionFulfilTimer.Start();
-			return true;
 		}
 
 		public async Task Disconnect()
 		{
-			refreshTokenTimer.Stop();
 			redemptionFulfilTimer.Stop();
 			manualDisconnect = true;
 			await DeleteRewards();
@@ -132,13 +122,11 @@ namespace SotnKhaosTools.Khaos
 
 		private async Task GetSubscribers()
 		{
-			Console.WriteLine($"Fetching subscribers...");
-
 			GetBroadcasterSubscriptionsResponse subs = await RetryRequest.Do(
-				async () => await api.Helix.Subscriptions.GetBroadcasterSubscriptions(
+				async () => await api.Helix.Subscriptions.GetBroadcasterSubscriptionsAsync(
 					broadcasterId,
-					null,
 					MaxSubscribers,
+					null,
 					api.Settings.AccessToken
 					),
 				RetryBaseMs,
@@ -149,10 +137,10 @@ namespace SotnKhaosTools.Khaos
 			if (subs.Total > MaxSubscribers)
 			{
 				GetBroadcasterSubscriptionsResponse subsPageTwoData = await RetryRequest.Do(
-				async () => await api.Helix.Subscriptions.GetBroadcasterSubscriptions(
+				async () => await api.Helix.Subscriptions.GetBroadcasterSubscriptionsAsync(
 					broadcasterId,
-					subs.Pagination.Cursor,
 					MaxSubscribers,
+					subs.Pagination.Cursor,
 					api.Settings.AccessToken
 				),
 				RetryBaseMs,
@@ -162,12 +150,10 @@ namespace SotnKhaosTools.Khaos
 			}
 
 			enemyRenamer.OverwriteNames(totalSubs.ToArray());
-
 		}
 
 		private async Task CreateRewards()
 		{
-			Console.WriteLine($"Creating rewards...");
 			for (int i = 0; i < toolConfig.Khaos.Actions.Count; i++)
 			{
 				Configuration.Models.Action? action = toolConfig.Khaos.Actions[i];
@@ -203,10 +189,8 @@ namespace SotnKhaosTools.Khaos
 						continue;
 					}
 
-					Console.WriteLine($"Request parameters: Title: {request.Title} Cost: {request.Cost} Cooldown: {request.GlobalCooldownSeconds}");
-
 					CreateCustomRewardsResponse response = await RetryRequest.Do(
-						async () => await api.Helix.ChannelPoints.CreateCustomRewards(
+						async () => await api.Helix.ChannelPoints.CreateCustomRewardsAsync(
 							broadcasterId,
 							request,
 							api.Settings.AccessToken
@@ -240,7 +224,7 @@ namespace SotnKhaosTools.Khaos
 			}
 
 			CreateCustomRewardsResponse response = await RetryRequest.Do(
-						async () => await api.Helix.ChannelPoints.CreateCustomRewards(
+						async () => await api.Helix.ChannelPoints.CreateCustomRewardsAsync(
 							broadcasterId,
 							request,
 							api.Settings.AccessToken
@@ -249,19 +233,15 @@ namespace SotnKhaosTools.Khaos
 						RetryCount
 						);
 			customRewardIds.Add(response.Data[0].Id);
-			Console.WriteLine($"Added new delayed reward {request.Title}.");
 			notificationService.AddMessage($"{request.Title} reward added.");
 		}
-		//TODO: Add a way to remove rewards on the fly
+
 		private async Task DeleteRewards()
 		{
-			Console.WriteLine($"Deleting rewards...");
 			for (int i = 0; i < customRewardIds.Count; i++)
 			{
-				Console.WriteLine($"Deleting reward with id: {customRewardIds[i]}");
-
 				await RetryRequest.Do(
-					async () => await api.Helix.ChannelPoints.DeleteCustomReward(
+					async () => await api.Helix.ChannelPoints.DeleteCustomRewardAsync(
 						broadcasterId,
 						customRewardIds[i],
 						api.Settings.AccessToken
@@ -273,25 +253,17 @@ namespace SotnKhaosTools.Khaos
 			notificationService.AddMessage("Channel Point rewards removed");
 		}
 
-		private async void RefreshToken(object sender, EventArgs e)
-		{
-			try
-			{
-				var refresh = await api.Auth.RefreshAuthTokenAsync(refreshToken, TwitchConfiguration.TwitchClientSecret, api.Settings.ClientId);
-				api.Settings.AccessToken = refresh.AccessToken;
-				Console.WriteLine("Successfully refreshed authentication token!");
-			}
-			catch (Exception ex)
-			{
-				throw new Exception("Server error while refreshing connection.", ex);
-			}
-		}
-
 		private async void Client_OnChannelPointsRewardRedeemed(object sender, OnChannelPointsRewardRedeemedArgs e)
 		{
-			Console.WriteLine($"Channel point reward redeemed: {e.RewardRedeemed.Redemption.Reward.Title}");
-
-			var action = toolConfig.Khaos.Actions.Where(a => a.Name == e.RewardRedeemed.Redemption.Reward.Title).FirstOrDefault();
+			Configuration.Models.Action? action = null;
+			for (int i = 0; i < toolConfig.Khaos.Actions.Count; i++)
+			{
+				if (e.RewardRedeemed.Redemption.Reward.Title == toolConfig.Khaos.Actions[i].Name)
+				{
+					action = toolConfig.Khaos.Actions[i];
+					break;
+				}
+			}
 
 			if (action is null)
 			{
@@ -323,7 +295,7 @@ namespace SotnKhaosTools.Khaos
 			}
 
 			await RetryRequest.Do(
-				async () => await api.Helix.ChannelPoints.UpdateCustomReward(
+				async () => await api.Helix.ChannelPoints.UpdateCustomRewardAsync(
 					broadcasterId,
 					e.RewardRedeemed.Redemption.Reward.Id,
 					new UpdateCustomRewardRequest { Cost = NewCost, },
@@ -337,13 +309,70 @@ namespace SotnKhaosTools.Khaos
 			actionDispatcher.EnqueueAction(actionEvent);
 		}
 
+		private void Client_OnSubscription(object sender, OnChannelSubscriptionArgs e)
+		{
+			Configuration.Models.Action? action = null;
+			string message = e.Subscription.SubMessage.Message != null ? e.Subscription.SubMessage.Message.ToLower() : String.Empty;
+			for (int i = 0; i < toolConfig.Khaos.Actions.Count; i++)
+			{
+				string actionName = toolConfig.Khaos.Actions[i].Name.ToLower();
+				if (message == actionName || message.StartsWith(actionName) || message.EndsWith(actionName))
+				{
+					action = toolConfig.Khaos.Actions[i];
+					break;
+				}
+			}
+
+			if (action is null)
+			{
+				int index = rng.Next(1, toolConfig.Khaos.Actions.Count);
+				action = toolConfig.Khaos.Actions[index];
+			}
+
+			var actionEvent = new EventAddAction { UserName = e.Subscription.Username, ActionIndex = toolConfig.Khaos.Actions.IndexOf(action), Data = String.Empty };
+
+			actionDispatcher.EnqueueAction(actionEvent);
+		}
+
+		private void Client_OnBitsReceivedV2(object sender, OnBitsReceivedV2Args e)
+		{
+			if (e.BitsUsed < toolConfig.Khaos.MinimumBits)
+			{
+				return;
+			}
+			string message = e.ChatMessage != null ? e.ChatMessage.ToLower() : String.Empty;
+			Configuration.Models.Action? action = null;
+			if (e.BitsUsed >= toolConfig.Khaos.BitsChoice)
+			{
+				for (int i = 0; i < toolConfig.Khaos.Actions.Count; i++)
+				{
+					string actionName = toolConfig.Khaos.Actions[i].Name.ToLower();
+					if (message == actionName || message.StartsWith(actionName) || message.EndsWith(actionName))
+					{
+						action = toolConfig.Khaos.Actions[i];
+						break;
+					}
+				}
+			}
+
+			if (action is null)
+			{
+				int index = rng.Next(1, toolConfig.Khaos.Actions.Count);
+				action = toolConfig.Khaos.Actions[index];
+			}
+
+			var actionEvent = new EventAddAction { UserName = e.UserName, ActionIndex = toolConfig.Khaos.Actions.IndexOf(action), Data = String.Empty };
+
+			actionDispatcher.EnqueueAction(actionEvent);
+		}
+
 		public async Task FulfillRedemption(Redemption redemption)
 		{
 			for (int i = 0; i <= UpdateRetryCount; i++)
 			{
 				try
 				{
-					await api.Helix.ChannelPoints.UpdateCustomRewardRedemptionStatus(
+					await api.Helix.ChannelPoints.UpdateRedemptionStatusAsync(
 						broadcasterId,
 						redemption.RewardId,
 						new List<string> { redemption.RedemptionId },
@@ -357,7 +386,7 @@ namespace SotnKhaosTools.Khaos
 					{
 						if (e.GetType() == typeof(BadResourceException))
 						{
-							Console.WriteLine("Server responded with 404 while updating redemption status on attempt: " + i);
+							//Console.WriteLine("Server responded with 404 while updating redemption status on attempt: " + i);
 						}
 						else
 						{
@@ -378,7 +407,7 @@ namespace SotnKhaosTools.Khaos
 			{
 				try
 				{
-					await api.Helix.ChannelPoints.UpdateCustomRewardRedemptionStatus(
+					await api.Helix.ChannelPoints.UpdateRedemptionStatusAsync(
 						broadcasterId,
 						redemption.RewardId,
 						new List<string> { redemption.RedemptionId },
@@ -394,7 +423,7 @@ namespace SotnKhaosTools.Khaos
 					{
 						if (e.GetType() == typeof(BadResourceException))
 						{
-							Console.WriteLine("Server responded with 404 while updating redemption status.");
+							//Console.WriteLine("Server responded with 404 while updating redemption status.");
 						}
 						else
 						{
@@ -435,7 +464,6 @@ namespace SotnKhaosTools.Khaos
 		{
 			if (!e.Successful)
 				throw new Exception($"Failed to listen! Response: {e.Response}");
-			Console.WriteLine(e.ChannelId + " " + e.Topic);
 		}
 
 		private void onPubSubServiceConnected(object sender, EventArgs e)
@@ -469,27 +497,5 @@ namespace SotnKhaosTools.Khaos
 				}
 			}
 		}
-
-		private string getAuthorizationCodeUrl(string clientId, string redirectUri, List<string> scopes)
-		{
-			var scopesStr = String.Join("+", scopes);
-
-			return "https://id.twitch.tv/oauth2/authorize?" +
-				   $"client_id={clientId}&" +
-				   $"redirect_uri={HttpUtility.UrlEncode(redirectUri)}&" +
-				   "response_type=code&" +
-				   $"scope={scopesStr}";
-		}
-
-		private void validateCreds()
-		{
-			if (String.IsNullOrEmpty(TwitchConfiguration.TwitchClientId))
-				throw new Exception("client id cannot be null or empty");
-			if (String.IsNullOrEmpty(TwitchConfiguration.TwitchClientSecret))
-				throw new Exception("client secret cannot be null or empty");
-			if (String.IsNullOrEmpty(Paths.TwitchRedirectUri))
-				throw new Exception("redirect uri cannot be null or empty");
-		}
-
 	}
 }

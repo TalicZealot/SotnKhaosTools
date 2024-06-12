@@ -17,7 +17,6 @@ namespace SotnKhaosTools.Khaos
 			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
 			this.sotnApi = sotnApi;
 		}
-		//TODO: rename familiars?
 		public void OverwriteNames(string[] subscribers)
 		{
 			subscribers = subscribers.OrderBy(x => rng.Next()).ToArray();
@@ -31,7 +30,7 @@ namespace SotnKhaosTools.Khaos
 					return;
 				}
 				sotnApi.GameApi.OverwriteString(boss.Value, subscribers[i], true);
-				Console.WriteLine($"{boss.Key} renamed to {subscribers[i]}");
+				//Console.WriteLine($"{boss.Key} renamed to {subscribers[i]}");
 				i++;
 			}
 			foreach (KeyValuePair<string, long> enemy in randomizedEnemies)
@@ -40,8 +39,12 @@ namespace SotnKhaosTools.Khaos
 				{
 					return;
 				}
+				if (enemy.Key == "OruburosRider")
+				{
+					continue;
+				}
 				sotnApi.GameApi.OverwriteString(enemy.Value, subscribers[i], true);
-				Console.WriteLine($"{enemy.Key} renamed to {subscribers[i]}");
+				//Console.WriteLine($"{enemy.Key} renamed to {subscribers[i]}");
 				i++;
 			}
 		}

@@ -44,8 +44,8 @@ namespace SotnKhaosTools.Configuration
 					Meter = 2,
 					AlertPath = Paths.AlucardWhatSound,
 					Cooldown = new System.TimeSpan(0, 0, 20),
-					ChannelPoints = 100,
-					MaximumChannelPoints = 300,
+					ChannelPoints = 200,
+					MaximumChannelPoints = 600,
 					Scaling = 1.02
 				},
 				new Action{
@@ -55,8 +55,8 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.AlucardWhatSound,
 					Cooldown = new System.TimeSpan(0, 35, 0),
 					StartsOnCooldown = true,
-					ChannelPoints = 200,
-					MaximumChannelPoints = 2000,
+					ChannelPoints = 600,
+					MaximumChannelPoints = 2600,
 					Scaling = 1.5
 				},
 				new Action{
@@ -66,7 +66,7 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.AlucardWhatSound,
 					Cooldown = new System.TimeSpan(0, 30, 0),
 					StartsOnCooldown = true,
-					ChannelPoints = 200,
+					ChannelPoints = 600,
 					MaximumChannelPoints = 4000,
 					Scaling = 1.5
 				},
@@ -77,7 +77,7 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.AlucardWhatSound,
 					Cooldown = new System.TimeSpan(0, 35, 0),
 					StartsOnCooldown = true,
-					ChannelPoints = 500,
+					ChannelPoints = 1500,
 					Scaling = 2.0
 				},
 				new Action{
@@ -94,7 +94,7 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.LibrarianThankYouSound,
 					Cooldown = new System.TimeSpan(0, 5, 0),
 					StartsOnCooldown = true,
-					ChannelPoints = 100,
+					ChannelPoints = 500,
 					Scaling = 2.0
 				},
 				new Action{
@@ -104,8 +104,8 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.AlucardWhatSound,
 					Cooldown = new System.TimeSpan(0, 35, 0),
 					StartsOnCooldown = true,
-					ChannelPoints = 200,
-					MaximumChannelPoints = 2000,
+					ChannelPoints = 1000,
+					MaximumChannelPoints = 4000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -126,7 +126,7 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.DeathLaughSound,
 					Cooldown = new System.TimeSpan(0, 35, 0),
 					StartsOnCooldown = true,
-					ChannelPoints = 500,
+					ChannelPoints = 1000,
 					Scaling = 2.0
 				},
 				new Action{
@@ -136,7 +136,7 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.DieSound,
 					Cooldown = new System.TimeSpan(0, 35, 0),
 					StartsOnCooldown = true,
-					ChannelPoints = 500,
+					ChannelPoints = 1000,
 					Scaling = 2.0
 				},
 				new Action{
@@ -147,7 +147,7 @@ namespace SotnKhaosTools.Configuration
 					Cooldown = new System.TimeSpan(0, 10, 0),
 					StartsOnCooldown = true,
 					ChannelPoints = 200,
-					MaximumChannelPoints = 2000,
+					MaximumChannelPoints = 1000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -156,7 +156,7 @@ namespace SotnKhaosTools.Configuration
 					Meter = 8,
 					AlertPath = Paths.SlowWhatSound,
 					Duration = new System.TimeSpan(0, 0, 40),
-					Cooldown = new System.TimeSpan(0, 6, 0),
+					Cooldown = new System.TimeSpan(0, 7, 0),
 					StartsOnCooldown = true,
 					ChannelPoints = 300,
 					MaximumChannelPoints = 3000,
@@ -167,7 +167,7 @@ namespace SotnKhaosTools.Configuration
 					Description = "Spells cost HP instead of mana.",
 					Meter = 4,
 					AlertPath = Paths.DeathLaughSound,
-					Duration = new System.TimeSpan(0, 1, 0),
+					Duration = new System.TimeSpan(0, 1, 30),
 					Cooldown = new System.TimeSpan(0, 6, 0),
 					ChannelPoints = 200,
 					MaximumChannelPoints = 2000,
@@ -179,9 +179,9 @@ namespace SotnKhaosTools.Configuration
 					Meter = 6,
 					AlertPath = Paths.DeathLaughSound,
 					Duration = new System.TimeSpan(0, 2, 0),
-					Cooldown = new System.TimeSpan(0, 5, 0),
+					Cooldown = new System.TimeSpan(0, 6, 0),
 					StartsOnCooldown = true,
-					ChannelPoints = 200,
+					ChannelPoints = 500,
 					MaximumChannelPoints = 2000,
 					Scaling = 1.5
 				},
@@ -193,7 +193,7 @@ namespace SotnKhaosTools.Configuration
 					Duration = new System.TimeSpan(0, 1, 30),
 					Interval = new System.TimeSpan(0, 0, 1),
 					Cooldown = new System.TimeSpan(0, 8, 0),
-					ChannelPoints = 300,
+					ChannelPoints = 600,
 					MaximumChannelPoints = 4000,
 					Scaling = 1.5
 				},
@@ -203,7 +203,7 @@ namespace SotnKhaosTools.Configuration
 					Meter = 7,
 					AlertPath = Paths.DeathLaughAlternateSound,
 					Cooldown = new System.TimeSpan(0, 3, 0),
-					ChannelPoints = 300,
+					ChannelPoints = 500,
 					MaximumChannelPoints = 4000,
 					Scaling = 1.5
 				},
@@ -215,7 +215,7 @@ namespace SotnKhaosTools.Configuration
 					Duration = new System.TimeSpan(0, 1, 30),
 					Cooldown = new System.TimeSpan(0, 8, 0),
 					StartsOnCooldown = true,
-					ChannelPoints = 400,
+					ChannelPoints = 1000,
 					MaximumChannelPoints = 4000,
 					Scaling = 1.5
 				},
@@ -224,10 +224,10 @@ namespace SotnKhaosTools.Configuration
 					Description = "Dodge for your life!",
 					Meter = 7,
 					AlertPath = Paths.LarisaLaugh,
-					Duration = new System.TimeSpan(0, 1, 30),
-					Cooldown = new System.TimeSpan(0, 7, 0),
+					Duration = new System.TimeSpan(0, 1, 00),
+					Cooldown = new System.TimeSpan(0, 8, 0),
 					StartsOnCooldown = true,
-					ChannelPoints = 400,
+					ChannelPoints = 1000,
 					MaximumChannelPoints = 4000,
 					Scaling = 1.5
 				},
@@ -236,7 +236,7 @@ namespace SotnKhaosTools.Configuration
 					Description = "Massive damage boost for the duration. Str buff on kill streak.",
 					Meter = 5,
 					AlertPath = Paths.QuadSound,
-					Duration = new System.TimeSpan(0, 0, 35),
+					Duration = new System.TimeSpan(0, 0, 45),
 					Cooldown = new System.TimeSpan(0, 15, 0),
 					ChannelPoints = 400,
 					MaximumChannelPoints = 4000,
@@ -248,7 +248,7 @@ namespace SotnKhaosTools.Configuration
 					Meter = 2,
 					AlertPath = Paths.Cristal,
 					Cooldown = new System.TimeSpan(0, 0, 0),
-					ChannelPoints = 100,
+					ChannelPoints = 300,
 					MaximumChannelPoints = 1000,
 					Scaling = 1.5
 				},
@@ -258,7 +258,7 @@ namespace SotnKhaosTools.Configuration
 					Meter = 5,
 					AlertPath = Paths.PotionDrink,
 					Cooldown = new System.TimeSpan(0, 2, 0),
-					ChannelPoints = 200,
+					ChannelPoints = 600,
 					MaximumChannelPoints = 2000,
 					Scaling = 1.5
 				},
@@ -269,7 +269,7 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.FairyPotionSound,
 					StartsOnCooldown = true,
 					Cooldown = new System.TimeSpan(0, 7, 0),
-					ChannelPoints = 300,
+					ChannelPoints = 800,
 					MaximumChannelPoints = 4000,
 					Scaling = 2.0
 				},
@@ -280,7 +280,7 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.BattleOrdersSound,
 					Duration = new System.TimeSpan(0, 1, 0),
 					Cooldown = new System.TimeSpan(0, 8, 0),
-					ChannelPoints = 200,
+					ChannelPoints = 600,
 					MaximumChannelPoints = 2000,
 					Scaling = 1.5
 				},
@@ -291,7 +291,7 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.Thunderstorm,
 					Duration = new System.TimeSpan(0, 1, 0),
 					Cooldown = new System.TimeSpan(0, 8, 0),
-					ChannelPoints = 300,
+					ChannelPoints = 600,
 					MaximumChannelPoints = 3000,
 					Scaling = 1.5
 				},
@@ -302,7 +302,7 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.Messatsu,
 					Duration = new System.TimeSpan(0, 1, 0),
 					Cooldown = new System.TimeSpan(0, 8, 0),
-					ChannelPoints = 300,
+					ChannelPoints = 600,
 					MaximumChannelPoints = 3000,
 					Scaling = 1.5
 				},
@@ -321,7 +321,7 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.MariaHelp,
 					Duration = new System.TimeSpan(0, 1, 0),
 					Cooldown = new System.TimeSpan(0, 6, 0),
-					ChannelPoints = 200,
+					ChannelPoints = 400,
 					MaximumChannelPoints = 3000,
 					Scaling = 1.5
 				},
@@ -332,7 +332,7 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.ZaWarudoSound,
 					Duration = new System.TimeSpan(0, 0, 30),
 					Cooldown = new System.TimeSpan(0, 6, 0),
-					ChannelPoints = 200,
+					ChannelPoints = 400,
 					MaximumChannelPoints = 2000,
 					Scaling = 1.0
 				},
@@ -343,7 +343,7 @@ namespace SotnKhaosTools.Configuration
 					AlertPath = Paths.Speed,
 					Duration = new System.TimeSpan(0, 0, 40),
 					Cooldown = new System.TimeSpan(0, 5, 0),
-					ChannelPoints = 300,
+					ChannelPoints = 400,
 					MaximumChannelPoints = 3000,
 					Scaling = 1.5
 				}
@@ -370,7 +370,6 @@ namespace SotnKhaosTools.Configuration
 			CostDecay = true;
 			LightHelpItemRewards = new string[]
 			{
-				"Leather shield",
 				"Shaman shield",
 				"Pot Roast",
 				"Holbein dagger",
@@ -380,8 +379,6 @@ namespace SotnKhaosTools.Configuration
 				"Wizard hat",
 				"Mirror cuirass",
 				"Brilliant mail",
-				"Aquamarine",
-				"Lapis lazuli",
 				"Mystic pendant",
 				"Gauntlet"
 			};
@@ -389,11 +386,9 @@ namespace SotnKhaosTools.Configuration
 			{
 				"Fire shield",
 				"Iron shield",
-				"Medusa shield",
 				"Alucard shield",
 				"Shield rod",
 				"Buffalo star",
-				"Flame star",
 				"Obsidian sword",
 				"Marsil",
 				"Elixir",
@@ -403,10 +398,8 @@ namespace SotnKhaosTools.Configuration
 				"Twilight cloak",
 				"Library card",
 				"Diamond",
-				"Onyx",
 				"Mystic pendant",
 				"Ring of Feanor",
-				"King's stone",
 				"Manna prism",
 				"Dark armor",
 				"Ring of Ares"

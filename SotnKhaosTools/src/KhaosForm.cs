@@ -84,7 +84,6 @@ namespace SotnKhaosTools
 			redemptionsGridView.DataSource = channelPointsController.Redemptions;
 			redemptionsGridView.CellClick += RefundRedemption;
 
-			//actionTimers = new List<int>(toolConfig.Khaos.Actions.Count);
 			actionTimers = new int[toolConfig.Khaos.Actions.Count];
 		}
 
@@ -321,6 +320,11 @@ namespace SotnKhaosTools
 		{
 			if (started)
 			{
+				if (connected)
+				{
+					await channelPointsController.Disconnect();
+					connected = false;
+				}
 				started = false;
 				khaosController.StopKhaos();
 				actionDispatcher.StopActions();
@@ -329,11 +333,6 @@ namespace SotnKhaosTools
 				startButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(48, 20, 48);
 				connectButton.Enabled = false;
 				connectButton.Text = "Connect to Twitch";
-				if (connected)
-				{
-					await channelPointsController.Disconnect();
-					connected = false;
-				}
 				autoKhaosButton.Enabled = false;
 				actionDispatcher.AutoKhaosOn = false;
 				autoKhaosButton.Text = "Start Auto Khaos";
@@ -373,8 +372,8 @@ namespace SotnKhaosTools
 		{
 			if (connected)
 			{
-				connectButton.Text = "Connect to Twitch";
 				await channelPointsController.Disconnect();
+				connectButton.Text = "Connect to Twitch";
 				connected = false;
 				connectButton.BackColor = System.Drawing.Color.FromArgb(17, 0, 17);
 				connectButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(48, 20, 48);

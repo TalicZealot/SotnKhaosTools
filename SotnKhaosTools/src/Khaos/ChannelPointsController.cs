@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using SotnKhaosTools.Configuration;
@@ -36,6 +37,7 @@ namespace SotnKhaosTools.Khaos
 		private readonly INotificationService notificationService;
 		private readonly IEnemyRenamer enemyRenamer;
 
+		private ImplicitOAuth ioa;
 		private TwitchAPI api = new TwitchAPI();
 		private TwitchPubSub client = new TwitchPubSub();
 		private string broadcasterId;
@@ -74,7 +76,7 @@ namespace SotnKhaosTools.Khaos
 		public void Connect()
 		{
 			api.Settings.ClientId = ApplicationDetails.twitchClientId;
-			ImplicitOAuth ioa = new ImplicitOAuth();
+			ioa = new ImplicitOAuth();
 			ioa.OnRevcievedValues += RequestConnection;
 			currentState = ioa.RequestClientAuthorization();
 		}
@@ -100,6 +102,8 @@ namespace SotnKhaosTools.Khaos
 			client.OnBitsReceivedV2 += Client_OnBitsReceivedV2;
 			client.OnChannelPointsRewardRedeemed += Client_OnChannelPointsRewardRedeemed;
 			client.OnPubSubServiceClosed += Client_OnPubSubServiceClosed;
+			client.ListenToSubscriptions(user.Id);
+			client.ListenToBitsEventsV2(user.Id);
 			client.ListenToChannelPoints(user.Id);
 			client.Connect();
 			notificationService.AddMessage("Connected to Twitch");
@@ -108,9 +112,10 @@ namespace SotnKhaosTools.Khaos
 
 		public async Task Disconnect()
 		{
+			await DeleteRewards();
+			ioa.StopListeners();
 			redemptionFulfilTimer.Stop();
 			manualDisconnect = true;
-			await DeleteRewards();
 			client.Disconnect();
 			for (int i = 0; i < actionsStartingOnCooldown.Count; i++)
 			{
@@ -311,6 +316,10 @@ namespace SotnKhaosTools.Khaos
 
 		private void Client_OnSubscription(object sender, OnChannelSubscriptionArgs e)
 		{
+			StringBuilder sb = new StringBuilder();
+			sb.Append(e.Subscription.Username);
+			sb.Append(" thanks for the sub!");
+			notificationService.AddMessage(sb.ToString());
 			Configuration.Models.Action? action = null;
 			string message = e.Subscription.SubMessage.Message != null ? e.Subscription.SubMessage.Message.ToLower() : String.Empty;
 			for (int i = 0; i < toolConfig.Khaos.Actions.Count; i++)
@@ -336,6 +345,10 @@ namespace SotnKhaosTools.Khaos
 
 		private void Client_OnBitsReceivedV2(object sender, OnBitsReceivedV2Args e)
 		{
+			StringBuilder sb = new StringBuilder();
+			sb.Append(e.UserName);
+			sb.Append(" thanks for the bits!");
+			notificationService.AddMessage(sb.ToString());
 			if (e.BitsUsed < toolConfig.Khaos.MinimumBits)
 			{
 				return;

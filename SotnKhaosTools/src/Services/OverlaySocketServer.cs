@@ -33,10 +33,6 @@ namespace SotnKhaosTools.Services
 
 		public OverlaySocketServer()
 		{
-			socketLoopTokenSource = new CancellationTokenSource();
-			listenerLoopTokenSource = new CancellationTokenSource();
-			server = new HttpListener();
-			server.Prefixes.Add(Globals.WebSocketUri);
 		}
 
 		public void StartServer()
@@ -45,6 +41,10 @@ namespace SotnKhaosTools.Services
 			{
 				return;
 			}
+			socketLoopTokenSource = new CancellationTokenSource();
+			listenerLoopTokenSource = new CancellationTokenSource();
+			server = new HttpListener();
+			server.Prefixes.Add(Globals.WebSocketUri);
 			started = true;
 			server.Start();
 			Task.Run(() => AcceptClients().ConfigureAwait(false));
@@ -58,7 +58,6 @@ namespace SotnKhaosTools.Services
 			}
 			started = false;
 			await CloseAllSocketsAsync();
-			listenerLoopTokenSource.Cancel();
 			server.Stop();
 			server.Close();
 		}

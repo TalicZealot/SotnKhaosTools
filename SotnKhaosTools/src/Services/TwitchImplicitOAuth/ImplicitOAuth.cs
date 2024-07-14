@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.IO.Ports;
 using System.Net;
 using System.Text;
 using Newtonsoft.Json.Linq;
@@ -8,6 +9,9 @@ namespace SotnKhaosTools.Services.TwitchImplicitOAuth
 {
 	public class ImplicitOAuth
 	{
+		private HttpListener? redirectListener;
+		private HttpListener? fetchListeneer;
+
 		string twitchAuthUrl = "https://id.twitch.tv/oauth2/authorize";
 		int salt = 0;
 
@@ -49,15 +53,31 @@ namespace SotnKhaosTools.Services.TwitchImplicitOAuth
 				return;
 			}
 
-			HttpListener redirectListener = new HttpListener();
+			redirectListener = new HttpListener();
 			redirectListener.Prefixes.Add(ApplicationDetails.redirectUri);
 			redirectListener.Start();
 			redirectListener.BeginGetContext(new AsyncCallback(IncommingTwitchRequest), redirectListener);
 
-			HttpListener fetchListeneer = new HttpListener();
+			fetchListeneer = new HttpListener();
 			fetchListeneer.Prefixes.Add(ApplicationDetails.fetchUri);
 			fetchListeneer.Start();
 			fetchListeneer.BeginGetContext(new AsyncCallback(IncommingLocalRequest), fetchListeneer);
+		}
+
+		public void StopListeners()
+		{
+			if (redirectListener.IsListening)
+			{
+				redirectListener.Close();
+				redirectListener.Stop();
+				redirectListener = null;
+			}
+			if (fetchListeneer.IsListening)
+			{
+				fetchListeneer.Close();
+				fetchListeneer.Stop();
+				fetchListeneer = null;
+			}
 		}
 
 		void IncommingLocalRequest(IAsyncResult result)

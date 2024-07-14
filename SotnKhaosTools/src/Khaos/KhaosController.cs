@@ -34,6 +34,9 @@ namespace SotnKhaosTools.Khaos
 		private bool alucardSecondCastle = false;
 		private bool inMainMenu = false;
 		private long renameAddress = 0xe09a0;
+		private int[] lightHelpItems;
+		private int[] mediumHelpItems;
+		private int[] heavyHelpItems;
 
 		private uint goalQuadKills = 0;
 		private uint currentQuadKills = 0;
@@ -69,8 +72,8 @@ namespace SotnKhaosTools.Khaos
 		private Emitter FlowerEmitter = new Emitter { BulletCooldown = 12, Rotation = 0.0174533 * 2, BulletTimer = 10, BurstCooldown = 100, BurstLimit = 7, Shots = 10, BulletSpeed = Constants.Khaos.SmallBulletSpeed };
 		private Emitter ZigZagEmitter = new Emitter { BulletCooldown = 16, Rotation = 0.61803, BulletTimer = 8, BurstCooldown = 0, BurstLimit = 10, Shots = 9, BulletSpeed = Constants.Khaos.SmallBulletSpeed * 2 };
 		private Emitter DiamondEmitter = new Emitter { BulletCooldown = 120, Rotation = 0.61803, BulletTimer = 8, BulletSpeed = Constants.Khaos.SmallBulletSpeed * 2 };
-		private Emitter JailFirstEmitter = new Emitter { BulletCooldown = 10, Rotation = 0.61803, BulletTimer = 8, BurstCooldown = 60, BurstLimit = 10, Shots = 12, BulletSpeed = Constants.Khaos.SmallBulletSpeed * 2 };
-		private Emitter JailSecondEmitter = new Emitter { BulletCooldown = 10, Rotation = 0.61803, BulletTimer = 8, BurstCooldown = 60, BurstLimit = 10, Shots = 12, BulletSpeed = Constants.Khaos.SmallBulletSpeed * 2 };
+		private Emitter JailFirstEmitter = new Emitter { BulletCooldown = 20, Rotation = 0.61803, BulletTimer = 8, BurstCooldown = 100, BurstLimit = 10, Shots = 12, BulletSpeed = Constants.Khaos.SmallBulletSpeed * 2 };
+		private Emitter JailSecondEmitter = new Emitter { BulletCooldown = 20, Rotation = 0.61803, BulletTimer = 8, BurstCooldown = 100, BurstLimit = 10, Shots = 12, BulletSpeed = Constants.Khaos.SmallBulletSpeed * 2 };
 		private List<Entity> bullets = new(100);
 
 		private Entity stand;
@@ -129,6 +132,7 @@ namespace SotnKhaosTools.Khaos
 		private bool isLoading = false;
 		private bool hasControl = false;
 		private bool isInvincible = false;
+		private uint defence = 0;
 		private bool canMenu = false;
 		private bool canSave = false;
 		private uint roomX = 0;
@@ -136,6 +140,7 @@ namespace SotnKhaosTools.Khaos
 		private uint area = 0;
 		private float cameraAdjustmentX = 0;
 		private float cameraAdjustmentY = 0;
+		private int frame = 0;
 		public KhaosController(IToolConfig toolConfig, ISotnApi sotnApi, ICheatsController cheatsController, INotificationService notificationService, IKhaosActionsInfoDisplay statusInfoDisplay)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
@@ -149,6 +154,21 @@ namespace SotnKhaosTools.Khaos
 			this.notificationService = notificationService;
 			this.statusInfoDisplay = statusInfoDisplay;
 			InitializeTimers();
+			lightHelpItems = new int[toolConfig.Khaos.LightHelpItemRewards.Length];
+			for (int i = 0; i < toolConfig.Khaos.LightHelpItemRewards.Length; i++)
+			{
+				lightHelpItems[i] = SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf(toolConfig.Khaos.LightHelpItemRewards[i]);
+			}
+			mediumHelpItems = new int[toolConfig.Khaos.MediumHelpItemRewards.Length];
+			for (int i = 0; i < toolConfig.Khaos.MediumHelpItemRewards.Length; i++)
+			{
+				mediumHelpItems[i] = SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf(toolConfig.Khaos.MediumHelpItemRewards[i]);
+			}
+			heavyHelpItems = new int[toolConfig.Khaos.HeavyHelpItemRewards.Length];
+			for (int i = 0; i < toolConfig.Khaos.HeavyHelpItemRewards.Length; i++)
+			{
+				heavyHelpItems[i] = SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf(toolConfig.Khaos.HeavyHelpItemRewards[i]);
+			}
 		}
 
 		public bool AutoKhaosOn { get; set; }
@@ -689,11 +709,11 @@ namespace SotnKhaosTools.Khaos
 		}
 		public void LightHelp(string user = Constants.Khaos.KhaosName)
 		{
-			string item = toolConfig.Khaos.LightHelpItemRewards[rng.Next(0, toolConfig.Khaos.LightHelpItemRewards.Length)];
+			int item = lightHelpItems[rng.Next(0, lightHelpItems.Length)];
 			int rolls = 0;
 			while (sotnApi.AlucardApi.HasItemInInventory(item) && rolls < Constants.Khaos.HelpItemRetryCount)
 			{
-				item = toolConfig.Khaos.LightHelpItemRewards[rng.Next(0, toolConfig.Khaos.LightHelpItemRewards.Length)];
+				item = lightHelpItems[rng.Next(0, lightHelpItems.Length)];
 				rolls++;
 			}
 
@@ -718,8 +738,8 @@ namespace SotnKhaosTools.Khaos
 			switch (roll)
 			{
 				case 1:
-					sotnApi.AlucardApi.GrantItemByName(item);
-					notificationService.AddMessage($"{user} gave you a {item}");
+					sotnApi.AlucardApi.GrantItem(item);
+					notificationService.AddMessage($"{user} gave you a {SotnApi.Constants.Values.Alucard.Equipment.Items[item]}");
 					break;
 				case 2:
 					sotnApi.AlucardApi.ActivatePotion(Potion.Potion);
@@ -736,11 +756,11 @@ namespace SotnKhaosTools.Khaos
 		}
 		public void MediumHelp(string user = Constants.Khaos.KhaosName)
 		{
-			string item = toolConfig.Khaos.MediumHelpItemRewards[rng.Next(0, toolConfig.Khaos.MediumHelpItemRewards.Length)];
+			int item = mediumHelpItems[rng.Next(0, mediumHelpItems.Length)];
 			int rolls = 0;
 			while (sotnApi.AlucardApi.HasItemInInventory(item) && rolls < Constants.Khaos.HelpItemRetryCount)
 			{
-				item = toolConfig.Khaos.MediumHelpItemRewards[rng.Next(0, toolConfig.Khaos.MediumHelpItemRewards.Length)];
+				item = mediumHelpItems[rng.Next(0, mediumHelpItems.Length)];
 				rolls++;
 			}
 
@@ -765,8 +785,8 @@ namespace SotnKhaosTools.Khaos
 			switch (roll)
 			{
 				case 1:
-					sotnApi.AlucardApi.GrantItemByName(item);
-					notificationService.AddMessage($"{user} gave you a {item}");
+					sotnApi.AlucardApi.GrantItem(item);
+					notificationService.AddMessage($"{user} gave you a {SotnApi.Constants.Values.Alucard.Equipment.Items[item]}");
 					break;
 				case 2:
 					sotnApi.AlucardApi.ActivatePotion(Potion.Elixir);
@@ -790,7 +810,7 @@ namespace SotnKhaosTools.Khaos
 				notificationService.UpdateOverlayMeter(khaosMeter);
 			}
 
-			string item;
+			int item;
 			int relic;
 			int roll;
 			RollRewards(out item, out relic, out roll);
@@ -803,13 +823,13 @@ namespace SotnKhaosTools.Khaos
 				GiveRewards(user, item, relic, roll);
 			}
 
-			void RollRewards(out string item, out int relic, out int roll)
+			void RollRewards(out int item, out int relic, out int roll)
 			{
-				item = toolConfig.Khaos.HeavyHelpItemRewards[rng.Next(0, toolConfig.Khaos.HeavyHelpItemRewards.Length)];
+				item = heavyHelpItems[rng.Next(0, heavyHelpItems.Length)];
 				int rolls = 0;
 				while (sotnApi.AlucardApi.HasItemInInventory(item) && rolls < Constants.Khaos.HelpItemRetryCount)
 				{
-					item = toolConfig.Khaos.HeavyHelpItemRewards[rng.Next(0, toolConfig.Khaos.HeavyHelpItemRewards.Length)];
+					item = heavyHelpItems[rng.Next(0, heavyHelpItems.Length)];
 					rolls++;
 				}
 
@@ -831,13 +851,13 @@ namespace SotnKhaosTools.Khaos
 				}
 			}
 
-			void GiveRewards(string user, string item, int relic, int roll)
+			void GiveRewards(string user, int item, int relic, int roll)
 			{
 				switch (roll)
 				{
 					case 1:
-						sotnApi.AlucardApi.GrantItemByName(item);
-						notificationService.AddMessage($"{user} gave you a {item}");
+						sotnApi.AlucardApi.GrantItem(item);
+						notificationService.AddMessage($"{user} gave you a {SotnApi.Constants.Values.Alucard.Equipment.Items[item]}");
 						break;
 					case 2:
 						SetRelicLocationDisplay(Constants.Khaos.ProgressionRelics[relic], false);
@@ -911,7 +931,8 @@ namespace SotnKhaosTools.Khaos
 			if (meterFull)
 			{
 				superMelty = true;
-				SetHasteStaticSpeeds(true);
+				SetSpeed(true);
+				//SetHasteStaticSpeeds(true);
 				sotnApi.AlucardApi.CurrentHp = sotnApi.AlucardApi.MaxtHp;
 				sotnApi.AlucardApi.CurrentMp = sotnApi.AlucardApi.MaxtMp;
 				sotnApi.AlucardApi.ActivatePotion(Potion.StrPotion);
@@ -1000,7 +1021,7 @@ namespace SotnKhaosTools.Khaos
 			}
 			hasteActive = true;
 			SpeedLocked = true;
-			SetHasteStaticSpeeds(meterFull);
+			SetSpeed(meterFull);
 			scheduledActions[(int) Enums.Event.HasteOff].Start();
 			notificationService.AddOverlayTimer((int) Enums.Action.Haste, (int) toolConfig.Khaos.Actions[(int) Enums.Action.Haste].Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer((int) Enums.Action.Haste);
@@ -1073,6 +1094,7 @@ namespace SotnKhaosTools.Khaos
 			isInvincible = sotnApi.AlucardApi.IsInvincible();
 			AlucardMapX = sotnApi.AlucardApi.MapX;
 			AlucardMapY = sotnApi.AlucardApi.MapY;
+			defence = sotnApi.AlucardApi.Def;
 			canMenu = sotnApi.GameApi.CanMenu();
 			canSave = sotnApi.GameApi.CanSave();
 			roomX = sotnApi.GameApi.RoomX;
@@ -1080,15 +1102,16 @@ namespace SotnKhaosTools.Khaos
 			area = sotnApi.GameApi.Area;
 			cameraAdjustmentX = sotnApi.GameApi.CameraAdjustmentX;
 			cameraAdjustmentY = sotnApi.GameApi.CameraAdjustmentY;
+			frame++;
 
 			CheckMainMenu();
+			CheckTimers();
 
 			if (!inAlucardMode || inTransition || isLoading || inMainMenu)
 			{
 				return;
 			}
 
-			CheckTimers();
 			CheckDashInput();
 			CheckManaUsage();
 			CheckHeartsPickedUp();
@@ -1096,6 +1119,7 @@ namespace SotnKhaosTools.Khaos
 			MeltyFrameAdvance();
 			CheckDizzyDoors();
 			CheckHasteAttack();
+			CheckHasteMist();
 			EmittersFrameAdvance();
 			BulletsFrameAdvance();
 		}
@@ -1132,10 +1156,6 @@ namespace SotnKhaosTools.Khaos
 		}
 		public void CheckTimers()
 		{
-			if (!hasHitbox || currentHp < 1)
-			{
-				return;
-			}
 			for (int i = 0; i < scheduledActions.Length; i++)
 			{
 				if (!scheduledActions[i].On)
@@ -1368,10 +1388,10 @@ namespace SotnKhaosTools.Khaos
 		}
 		private void RandomizeInventory()
 		{
-			bool hasHolyGlasses = sotnApi.AlucardApi.HasItemInInventory("Holy glasses");
-			bool hasSpikeBreaker = sotnApi.AlucardApi.HasItemInInventory("Spike Breaker");
-			bool hasGoldRing = sotnApi.AlucardApi.HasItemInInventory("Gold Ring");
-			bool hasSilverRing = sotnApi.AlucardApi.HasItemInInventory("Silver Ring");
+			bool hasSpikeBreaker = sotnApi.AlucardApi.HasItemInInventory(183);//Spike Breaker
+			bool hasHolyGlasses = sotnApi.AlucardApi.HasItemInInventory(203);//Holy glasses
+			bool hasGoldRing = sotnApi.AlucardApi.HasItemInInventory(241);//Gold Ring
+			bool hasSilverRing = sotnApi.AlucardApi.HasItemInInventory(242);//Silver Ring
 
 			sotnApi.AlucardApi.ClearInventory();
 
@@ -1534,6 +1554,10 @@ namespace SotnKhaosTools.Khaos
 		}
 		private void KillAlucard()
 		{
+			if (!inAlucardMode || inTransition || isLoading || inMainMenu || !hasHitbox)
+			{
+				return;
+			}
 			sotnApi.EntityApi.SpawnEntity(Constants.Khaos.KillEntity);
 			sotnApi.AlucardApi.InvincibilityTimer = 0;
 			scheduledActions[(int) Enums.Event.KhaosTrackOff].Stop();
@@ -1576,6 +1600,10 @@ namespace SotnKhaosTools.Khaos
 		}
 		private void ThirstDrain()
 		{
+			if (!inAlucardMode || inTransition || isLoading || inMainMenu || !hasHitbox || currentHp < 1)
+			{
+				return;
+			}
 			if (thirstLevel < 1)
 			{
 				return;
@@ -1612,7 +1640,7 @@ namespace SotnKhaosTools.Khaos
 		}
 		private void HordeSpawn()
 		{
-			if (!inAlucardMode || !canMenu || currentHp < 5 || canSave || IsInRoomList(Constants.Khaos.RichterRooms) || IsInRoomList(Constants.Khaos.ShopRoom) || IsInRoomList(Constants.Khaos.LesserDemonZone))
+			if (!inAlucardMode || !canMenu || currentHp < 1 || canSave || IsInRoomList(Constants.Khaos.RichterRooms) || IsInRoomList(Constants.Khaos.ShopRoom) || IsInRoomList(Constants.Khaos.LesserDemonZone))
 			{
 				return;
 			}
@@ -1708,13 +1736,17 @@ namespace SotnKhaosTools.Khaos
 		}
 		private void EnduranceSpawn()
 		{
-			float healthMultiplier = 3.5F;
+			if (!inAlucardMode || inTransition || isLoading || inMainMenu || !hasHitbox || currentHp < 1)
+			{
+				return;
+			}
 
 			if ((roomX == enduranceRoomX && roomY == enduranceRoomY) || !inAlucardMode || !canMenu)
 			{
 				return;
 			}
 
+			float healthMultiplier = 3.5F;
 			Entity? bossCopy = null;
 
 			long enemy = sotnApi.EntityApi.FindEntityFrom(Constants.Khaos.EnduranceBosses);
@@ -1881,14 +1913,14 @@ namespace SotnKhaosTools.Khaos
 					break;
 			}
 
-			bool hasHolyGlasses = sotnApi.AlucardApi.HasItemInInventory("Holy glasses");
-			bool hasSpikeBreaker = sotnApi.AlucardApi.HasItemInInventory("Spike Breaker");
-			bool hasGoldRing = sotnApi.AlucardApi.HasItemInInventory("Gold Ring");
-			bool hasSilverRing = sotnApi.AlucardApi.HasItemInInventory("Silver Ring");
-			bool equippedHolyGlasses = Equipment.Items[(int) (sotnApi.AlucardApi.Helm + Equipment.HandCount + 1)] == "Holy glasses";
-			bool equippedSpikeBreaker = Equipment.Items[(int) (sotnApi.AlucardApi.Armor + Equipment.HandCount + 1)] == "Spike Breaker";
-			bool equippedGoldRing = Equipment.Items[(int) (sotnApi.AlucardApi.Accessory1 + Equipment.HandCount + 1)] == "Gold Ring" || Equipment.Items[(int) (sotnApi.AlucardApi.Accessory2 + Equipment.HandCount + 1)] == "Gold Ring";
-			bool equippedSilverRing = Equipment.Items[(int) (sotnApi.AlucardApi.Accessory1 + Equipment.HandCount + 1)] == "Silver Ring" || Equipment.Items[(int) (sotnApi.AlucardApi.Accessory2 + Equipment.HandCount + 1)] == "Silver Ring";
+			bool hasSpikeBreaker = sotnApi.AlucardApi.HasItemInInventory(183);
+			bool hasHolyGlasses = sotnApi.AlucardApi.HasItemInInventory(203);
+			bool hasGoldRing = sotnApi.AlucardApi.HasItemInInventory(241);
+			bool hasSilverRing = sotnApi.AlucardApi.HasItemInInventory(242);
+			bool equippedSpikeBreaker = (int) (sotnApi.AlucardApi.Armor + Equipment.HandCount + 1) == 183;
+			bool equippedHolyGlasses = (int) (sotnApi.AlucardApi.Helm + Equipment.HandCount + 1) == 203;
+			bool equippedGoldRing = (int) (sotnApi.AlucardApi.Accessory1 + Equipment.HandCount + 1) == 241 || (int) (sotnApi.AlucardApi.Accessory2 + Equipment.HandCount + 1) == 242;
+			bool equippedSilverRing = (int) (sotnApi.AlucardApi.Accessory1 + Equipment.HandCount + 1) == 242 || (int) (sotnApi.AlucardApi.Accessory2 + Equipment.HandCount + 1) == 242;
 
 
 			sotnApi.AlucardApi.Gold = goldPercentage == 0 ? 0 : (uint) Math.Round(sotnApi.AlucardApi.Gold * goldPercentage);
@@ -2021,6 +2053,10 @@ namespace SotnKhaosTools.Khaos
 			JailFirstEmitter.Enabled = false;
 			JailSecondEmitter.Enabled = false;
 
+			if (!inAlucardMode || inTransition || isLoading || inMainMenu || !hasHitbox || currentHp < 1)
+			{
+				return;
+			}
 			for (int i = 0; i < bullets.Count; i++)
 			{
 				bullets[i].Palette = 0;
@@ -2049,6 +2085,10 @@ namespace SotnKhaosTools.Khaos
 			{
 				return;
 			}
+			if (!inAlucardMode || !canMenu || currentHp < 1 || canSave || IsInRoomList(Constants.Khaos.RichterRooms) || IsInRoomList(Constants.Khaos.ShopRoom) || IsInRoomList(Constants.Khaos.LesserDemonZone))
+			{
+				return;
+			}
 
 			int emittersActive = 0;
 			int minEmitters = superBulletHell ? 2 : 1;
@@ -2073,9 +2113,9 @@ namespace SotnKhaosTools.Khaos
 			while (emittersActive < minEmitters)
 			{
 				double xpos = rng.Next(20, 230);
-				double ypos = rng.Next(2, 15);
-				double accelX = rng.NextDouble() / 3;
-				double accelY = rng.NextDouble() / 3;
+				double ypos = 5;
+				double accelX = rng.NextDouble() / 5;
+				double accelY = rng.NextDouble() / 7;
 
 				emittersActive++;
 				int roll = rng.Next(0, 4);
@@ -2106,18 +2146,24 @@ namespace SotnKhaosTools.Khaos
 						JailFirstEmitter.Enabled = true;
 						JailFirstEmitter.Xpos = rng.Next(2, 25);
 						JailFirstEmitter.Ypos = ypos;
-						JailFirstEmitter.AccelerationX = rng.NextDouble() / 4;
-						JailFirstEmitter.AccelerationY = rng.NextDouble() / 4;
+						JailFirstEmitter.AccelerationX = rng.NextDouble() / 6;
+						JailFirstEmitter.AccelerationY = rng.NextDouble() / 7;
 						JailSecondEmitter.Enabled = true;
 						JailSecondEmitter.Xpos = rng.Next(200, 254);
-						JailSecondEmitter.Ypos = rng.Next(2, 15);
-						JailSecondEmitter.AccelerationX = rng.NextDouble() / 4;
-						JailSecondEmitter.AccelerationY = rng.NextDouble() / 4;
+						JailSecondEmitter.Ypos = ypos;
+						JailSecondEmitter.AccelerationX = rng.NextDouble() / 6;
+						JailSecondEmitter.AccelerationY = rng.NextDouble() / 7;
 						break;
 					default:
 						break;
 				}
 			}
+
+			ushort damage = (ushort) (5 + defence);
+			Constants.Khaos.FlowerBullet.Damage = damage;
+			Constants.Khaos.ZigZagBullet.Damage = damage;
+			Constants.Khaos.JailBullet.Damage = damage;
+			Constants.Khaos.DiamondBullet.Damage = damage;
 
 			FlowerFrameAdvance();
 			ZigZagFrameAdvance();
@@ -2149,6 +2195,10 @@ namespace SotnKhaosTools.Khaos
 				FlowerEmitter.AccelerationX *= -1;
 			}
 
+			if (sotnApi.AlucardApi.SubweaponTimer > 0 && sotnApi.AlucardApi.Subweapon == Subweapon.Stopwatch && frame % 2 == 0)
+			{
+				FlowerEmitter.BulletTimer++;
+			}
 			FlowerEmitter.BulletTimer--;
 			if (FlowerEmitter.BulletTimer > 0)
 			{
@@ -2203,6 +2253,10 @@ namespace SotnKhaosTools.Khaos
 				ZigZagEmitter.AccelerationX *= -1;
 			}
 
+			if (sotnApi.AlucardApi.SubweaponTimer > 0 && sotnApi.AlucardApi.Subweapon == Subweapon.Stopwatch && frame % 2 == 0)
+			{
+				ZigZagEmitter.BulletTimer++;
+			}
 			ZigZagEmitter.BulletTimer--;
 			if (ZigZagEmitter.BulletTimer > 0)
 			{
@@ -2260,6 +2314,10 @@ namespace SotnKhaosTools.Khaos
 				DiamondEmitter.AccelerationX *= -1;
 			}
 
+			if (sotnApi.AlucardApi.SubweaponTimer > 0 && sotnApi.AlucardApi.Subweapon == Subweapon.Stopwatch && frame % 2 == 0)
+			{
+				DiamondEmitter.BulletTimer++;
+			}
 			DiamondEmitter.BulletTimer--;
 			if (DiamondEmitter.BulletTimer > 0)
 			{
@@ -2343,6 +2401,10 @@ namespace SotnKhaosTools.Khaos
 				JailSecondEmitter.AccelerationX *= -1;
 			}
 
+			if (sotnApi.AlucardApi.SubweaponTimer > 0 && sotnApi.AlucardApi.Subweapon == Subweapon.Stopwatch && frame % 2 == 0)
+			{
+				JailFirstEmitter.BulletTimer++;
+			}
 			JailFirstEmitter.BulletTimer--;
 			if (JailFirstEmitter.BulletTimer > 0)
 			{
@@ -2412,8 +2474,18 @@ namespace SotnKhaosTools.Khaos
 					continue;
 				}
 
-				bullets[i].Xpos += bullets[i].Locals.AccelerationX + cameraAdjustmentX;
-				bullets[i].Ypos += bullets[i].Locals.AccelerationY + cameraAdjustmentY;
+				double accelerationX = bullets[i].Locals.AccelerationX;
+				double accelerationY = bullets[i].Locals.AccelerationY;
+
+
+				if (sotnApi.AlucardApi.SubweaponTimer > 0 && sotnApi.AlucardApi.Subweapon == Subweapon.Stopwatch)
+				{
+					accelerationX /= 2;
+					accelerationY /= 2;
+
+				}
+				bullets[i].Xpos += accelerationX + cameraAdjustmentX;
+				bullets[i].Ypos += accelerationY + cameraAdjustmentY;
 			}
 
 			bullets.RemoveAll(f => f.ZPriority != 0x00FF || f.Damage == 0);
@@ -2476,7 +2548,12 @@ namespace SotnKhaosTools.Khaos
 			stand.AnimationSet = 0;
 			stand.Unk5A = 0;
 			stand.AnimationCurrentFrame = 0;
-			SetHasteStaticSpeeds(false);
+			if (!hasteActive)
+			{
+				sotnApi.AlucardApi.WingsmashHorizontalSpeed = DefaultSpeeds.WingsmashHorizontal;
+				sotnApi.AlucardApi.BackdashWholeSpeed = DefaultSpeeds.BackdashWhole;
+				SetSpeed();
+			}
 		}
 		private void FourBeastsOff()
 		{
@@ -2493,25 +2570,13 @@ namespace SotnKhaosTools.Khaos
 		}
 		private void HasteOff()
 		{
-			SetSpeed();
+			sotnApi.AlucardApi.WingsmashHorizontalSpeed = DefaultSpeeds.WingsmashHorizontal;
+			sotnApi.AlucardApi.BackdashWholeSpeed = DefaultSpeeds.BackdashWhole;
 			superHaste = false;
 			hasteActive = false;
 			SpeedLocked = false;
 		}
-		private void SetHasteStaticSpeeds(bool super = false)
-		{
-			float superFactor = super ? 2F : 1F;
-			float superWingsmashFactor = super ? 1.5F : 1F;
-			float factor = toolConfig.Khaos.HasteFactor;
-
-			uint wolfDashTopLeft = DefaultSpeeds.WolfDashTopLeft;
-
-			sotnApi.AlucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * ((factor * superWingsmashFactor) / 2.5));
-			sotnApi.AlucardApi.WolfDashTopRightSpeed = (sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * ((factor * superFactor) / 2));
-			sotnApi.AlucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling((sbyte) wolfDashTopLeft * ((factor * superFactor) / 2));
-			sotnApi.AlucardApi.BackdashWholeSpeed = (int) (DefaultSpeeds.BackdashWhole - 1);
-		}
-		private void ToggleHasteDynamicSpeeds(float factor = 1)
+		private void ToggleDashSpeeds(float factor = 1)
 		{
 			uint horizontalWhole = (uint) (DefaultSpeeds.WalkingWhole * factor);
 			uint horizontalFract = (uint) (DefaultSpeeds.WalkingFract * factor);
@@ -3017,30 +3082,16 @@ namespace SotnKhaosTools.Khaos
 					break;
 			}
 		}
-		private void SetSpeed(float factor = 1)
+		private void SetSpeed(bool super = false)
 		{
-			bool slow = factor < 1;
-			bool fast = factor > 1;
-
-			uint horizontalWhole = (uint) (DefaultSpeeds.WalkingWhole * factor);
-			uint horizontalFract = (uint) (DefaultSpeeds.WalkingFract * factor);
-			uint wolfDashTopLeft = DefaultSpeeds.WolfDashTopLeft;
+			float factor = toolConfig.Khaos.HasteFactor / 2;
+			if (super)
+			{
+				factor *= 1.5f;
+			}
 
 			sotnApi.AlucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * factor);
-			sotnApi.AlucardApi.WalkingWholeSpeed = horizontalWhole;
-			sotnApi.AlucardApi.WalkingFractSpeed = horizontalFract;
-			sotnApi.AlucardApi.JumpingHorizontalWholeSpeed = horizontalWhole;
-			sotnApi.AlucardApi.JumpingHorizontalFractSpeed = horizontalFract;
-			sotnApi.AlucardApi.JumpingAttackLeftHorizontalWholeSpeed = (uint) (0xFF - horizontalWhole);
-			sotnApi.AlucardApi.JumpingAttackLeftHorizontalFractSpeed = horizontalFract;
-			sotnApi.AlucardApi.JumpingAttackRightHorizontalWholeSpeed = horizontalWhole;
-			sotnApi.AlucardApi.JumpingAttackRightHorizontalFractSpeed = horizontalFract;
-			sotnApi.AlucardApi.FallingHorizontalWholeSpeed = horizontalWhole;
-			sotnApi.AlucardApi.FallingHorizontalFractSpeed = horizontalFract;
-			sotnApi.AlucardApi.WolfDashTopRightSpeed = (sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * factor);
-			sotnApi.AlucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling((sbyte) wolfDashTopLeft * factor);
-			sotnApi.AlucardApi.BackdashWholeSpeed = (int) (DefaultSpeeds.BackdashWhole * factor);
-			sotnApi.AlucardApi.BackdashDecel = slow == true ? DefaultSpeeds.BackdashDecelSlow : DefaultSpeeds.BackdashDecel;
+			sotnApi.AlucardApi.BackdashWholeSpeed = (int) (DefaultSpeeds.BackdashWhole - 1);
 		}
 
 		private void FixEntranceSlow()
@@ -3165,6 +3216,57 @@ namespace SotnKhaosTools.Khaos
 				alucardEntity.AnimationFrameDuration = 1;
 			}
 		}
+		private void CheckHasteMist()
+		{
+			if (!hasteActive)
+			{
+				return;
+			}
+			if (sotnApi.AlucardApi.State == SotnApi.Constants.Values.Alucard.States.Mist || (sotnApi.AlucardApi.State == SotnApi.Constants.Values.Alucard.States.Bat && alucardEntity.Step2 != 0x03 && ((sotnApi.GameApi.InputFlags & SotnApi.Constants.Values.Game.Controller.Cross) != SotnApi.Constants.Values.Game.Controller.Cross)))
+			{
+				bool right = ((sotnApi.GameApi.InputFlags & SotnApi.Constants.Values.Game.Controller.Right) == SotnApi.Constants.Values.Game.Controller.Right);
+				bool left = ((sotnApi.GameApi.InputFlags & SotnApi.Constants.Values.Game.Controller.Left) == SotnApi.Constants.Values.Game.Controller.Left);
+				bool up = ((sotnApi.GameApi.InputFlags & SotnApi.Constants.Values.Game.Controller.Up) == SotnApi.Constants.Values.Game.Controller.Up);
+				bool down = ((sotnApi.GameApi.InputFlags & SotnApi.Constants.Values.Game.Controller.Down) == SotnApi.Constants.Values.Game.Controller.Down);
+
+				if (right && !up && !down)
+				{
+					alucardEntity.AccelerationX = 3;
+				}
+				if (left && !up && !down)
+				{
+					alucardEntity.AccelerationX = -3;
+				}
+				if (up && !left && !down)
+				{
+					alucardEntity.AccelerationY = -3;
+				}
+				if (down && !left && !right)
+				{
+					alucardEntity.AccelerationY = 3;
+				}
+				if (right && down)
+				{
+					alucardEntity.AccelerationX = 2.121;
+					alucardEntity.AccelerationY = 2.121;
+				}
+				if (left && up)
+				{
+					alucardEntity.AccelerationX = -2.121;
+					alucardEntity.AccelerationY = -2.121;
+				}
+				if (left && down)
+				{
+					alucardEntity.AccelerationX = -2.121;
+					alucardEntity.AccelerationY = 2.121;
+				}
+				if (right && up)
+				{
+					alucardEntity.AccelerationX = 2.121;
+					alucardEntity.AccelerationY = -2.121;
+				}
+			}
+		}
 		private void CheckDashInput()
 		{
 			if (!hasHitbox || currentHp < 1)
@@ -3173,7 +3275,7 @@ namespace SotnKhaosTools.Khaos
 			}
 			if (hasteActive && !hasteSpeedOn && sotnApi.GameApi.QcfInputCounter == 0xff)
 			{
-				ToggleHasteDynamicSpeeds(superHaste ? toolConfig.Khaos.HasteFactor * Constants.Khaos.HasteDashFactor : toolConfig.Khaos.HasteFactor);
+				ToggleDashSpeeds(superHaste ? toolConfig.Khaos.HasteFactor * Constants.Khaos.HasteDashFactor : toolConfig.Khaos.HasteFactor);
 				hasteSpeedOn = true;
 			}
 			else if (hasteSpeedOn &&
@@ -3181,7 +3283,7 @@ namespace SotnKhaosTools.Khaos
 				(!sotnApi.AlucardApi.FacingLeft && (sotnApi.GameApi.InputFlags & SotnApi.Constants.Values.Game.Controller.Right) != SotnApi.Constants.Values.Game.Controller.Right))
 				)
 			{
-				ToggleHasteDynamicSpeeds();
+				ToggleDashSpeeds();
 				hasteSpeedOn = false;
 			}
 		}
